@@ -17,6 +17,7 @@ h1 { margin-bottom: 0; }
 .subtitle { color: #666; margin-top: 4px; }
 h2 { border-bottom: 1px solid #ddd; padding-bottom: 4px; margin-top: 40px; }
 h3 { margin-top: 28px; }
+h2.part { font-size: 1.8em; border-bottom: 3px solid #222; margin-top: 56px; }
 .row {
 display: flex;
 flex-wrap: wrap;
@@ -47,6 +48,59 @@ padding: 8px;
 
 <h1>SYDE671 - Assignment 1</h1>
 <p class="subtitle">Arthur Kowara</p>
+
+<h2 class="part">Part 1: Focal Length and Perspective</h2>
+<p>Every pair below was taken on an iPhone 16, changing only the distance to the subject and the
+zoom (focal lengths are 35mm-equivalent). Keeping the subject roughly the same size in the frame
+while changing the camera distance shows how perspective depends on where the camera is, not
+on the lens itself.</p>
+
+<h3>Part 1a: Selfie, Close-Up vs Zoomed</h3>
+<p>The first photo was taken close to the face with the wide lens. The second was taken from
+further away and zoomed in so the face fills the frame by the same amount. Up close, the nose
+is much nearer to the camera than the ears, so it looks larger and the face appears stretched,
+with the ears almost hidden. From further away, the relative distances even out, the face looks
+flatter and more natural, and the ears come back into view.</p>
+<div class="row">
+<figure>
+<img src="media/part_1/part_a/selfie_close.jpg" alt="Selfie taken close to the face with a wide lens">
+<figcaption>Close up, wide (26 mm)</figcaption>
+</figure>
+<figure>
+<img src="media/part_1/part_a/selfie_zoom.jpg" alt="Selfie taken from further away with zoom">
+<figcaption>Further away, zoomed (74 mm)</figcaption>
+</figure>
+</div>
+
+<h3>Part 1b: Perspective Compression</h3>
+<p>Each scene was photographed from up close with the wide lens, then from further back with
+the camera zoomed in to frame it similarly. The wide shots exaggerate depth: nearby objects look
+large and the background falls away quickly. In the zoomed shots, objects at different depths
+look closer together in size and distance, so the scene appears flattened or "compressed". The
+cubicles in the office stack up tightly, and the trees and the car at the end of the path appear much
+nearer to the foreground.</p>
+<div class="row">
+<figure>
+<img src="media/part_1/part_b/office_far.jpg" alt="Office hallway taken close with a wide lens">
+<figcaption>Office: wide (26 mm)</figcaption>
+</figure>
+<figure>
+<img src="media/part_1/part_b/office_zoom.jpg" alt="Office hallway taken from further back with zoom">
+<figcaption>Office: zoomed (98 mm)</figcaption>
+</figure>
+</div>
+<div class="row">
+<figure>
+<img src="media/part_1/part_b/path_far.jpg" alt="Forest path taken close with a wide lens">
+<figcaption>Path: wide (26 mm)</figcaption>
+</figure>
+<figure>
+<img src="media/part_1/part_b/path_zoom.jpg" alt="Forest path taken from further back with zoom">
+<figcaption>Path: zoomed (88 mm)</figcaption>
+</figure>
+</div>
+
+<h2 class="part">Part 2: Colourizing the Prokudin-Gorskii Collection</h2>
 
 <h2>Preprocessing</h2>
 <p>The first step in the image processing was converting the image to grayscale to allow each plate
