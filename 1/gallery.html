@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Assignment 1 - Results Gallery</title>
+<style>
+body {
+font-family: Arial, sans-serif;
+margin: 20px auto;
+max-width: 1100px;
+padding: 0 16px;
+line-height: 1.5;
+color: #222;
+}
+h1 { margin-bottom: 0; }
+.subtitle { color: #666; margin-top: 4px; }
+h2 { border-bottom: 1px solid #ddd; padding-bottom: 4px; margin-top: 48px; }
+h3 { margin-top: 28px; }
+.row {
+display: flex;
+flex-wrap: wrap;
+gap: 16px;
+margin: 16px 0;
+}
+figure {
+flex: 1 1 200px;
+max-width: 250px;
+margin: 0;
+}
+figure img {
+width: 100%;
+display: block;
+}
+figcaption {
+font-size: 0.9em;
+color: #555;
+margin-top: 4px;
+}
+.top { font-size: 0.9em; }
+</style>
+</head>
+<body>
+
+<p><a href="index.html">&larr; Back to write-up</a></p>
+<h1 id="top">SYDE671 - Assignment 1: Results Gallery</h1>
+<p class="subtitle">Arthur Kowara</p>
+<p>Every image processed with each comparison metric (L2 and NCC) at each stage of the pipeline.
+Click any image to open it at full resolution.</p>
+
+<ul>
+<li><a href="#l2">L2 (Euclidean Distance)</a><ul>
+<li><a href="#l2-single_scale_alignment">Single-Scale Alignment</a></li>
+<li><a href="#l2-multi_scale_alignment">Multi-Scale Alignment</a></li>
+<li><a href="#l2-gradient_alignment">Gradient Alignment</a></li>
+<li><a href="#l2-crop_from_shift">Crop From Shifts</a></li>
+<li><a href="#l2-auto_crop">Auto Crop</a></li>
+<li><a href="#l2-auto_contrast">Auto Contrast</a></li>
+</ul></li>
+<li><a href="#ncc">NCC (Normalized Cross Correlation)</a><ul>
+<li><a href="#ncc-single_scale_alignment">Single-Scale Alignment</a></li>
+<li><a href="#ncc-multi_scale_alignment">Multi-Scale Alignment</a></li>
+<li><a href="#ncc-gradient_alignment">Gradient Alignment</a></li>
+<li><a href="#ncc-crop_from_shift">Crop From Shifts</a></li>
+<li><a href="#ncc-auto_crop">Auto Crop</a></li>
+<li><a href="#ncc-auto_contrast">Auto Contrast</a></li>
+</ul></li>
+</ul>
+
+<h2 id="l2">L2 (Euclidean Distance)</h2>
+<h3 id="l2-single_scale_alignment">Single-Scale Alignment</h3>
+<div class="row gallery">
+<figure><a href="media/l2_results/single_scale_alignment/00056v.jpg"><img src="media/l2_results/single_scale_alignment/00056v.jpg" alt="00056v, L2 single-scale alignment" loading="lazy"></a><figcaption>00056v</figcaption></figure>
+<figure><a href="media/l2_results/single_scale_alignment/00125v.jpg"><img src="media/l2_results/single_scale_alignment/00125v.jpg" alt="00125v, L2 single-scale alignment" loading="lazy"></a><figcaption>00125v</figcaption></figure>
+<figure><a href="media/l2_results/single_scale_alignment/00163v.jpg"><img src="media/l2_results/single_scale_alignment/00163v.jpg" alt="00163v, L2 single-scale alignment" loading="lazy"></a><figcaption>00163v</figcaption></figure>
+<figure><a href="media/l2_results/single_scale_alignment/00458u.jpg"><img src="media/l2_results/single_scale_alignment/00458u.jpg" alt="00458u, L2 single-scale alignment" loading="lazy"></a><figcaption>00458u</figcaption></figure>
+<figure><a href="media/l2_results/single_scale_alignment/00804v.jpg"><img src="media/l2_results/single_scale_alignment/00804v.jpg" alt="00804v, L2 single-scale alignment" loading="lazy"></a><figcaption>00804v</figcaption></figure>
+<figure><a href="media/l2_results/single_scale_alignment/01007a.jpg"><img src="media/l2_results/single_scale_alignment/01007a.jpg" alt="01007a, L2 single-scale alignment" loading="lazy"></a><figcaption>01007a</figcaption></figure>
+<figure><a href="media/l2_results/single_scale_alignment/01047u.jpg"><img src="media/l2_results/single_scale_alignment/01047u.jpg" alt="01047u, L2 single-scale alignment" loading="lazy"></a><figcaption>01047u</figcaption></figure>
+<figure><a href="media/l2_results/single_scale_alignment/01164v.jpg"><img src="media/l2_results/single_scale_alignment/01164v.jpg" alt="01164v, L2 single-scale alignment" loading="lazy"></a><figcaption>01164v</figcaption></figure>
+<figure><a href="media/l2_results/single_scale_alignment/01269v.jpg"><img src="media/l2_results/single_scale_alignment/01269v.jpg" alt="01269v, L2 single-scale alignment" loading="lazy"></a><figcaption>01269v</figcaption></figure>
+<figure><a href="media/l2_results/single_scale_alignment/01522v.jpg"><img src="media/l2_results/single_scale_alignment/01522v.jpg" alt="01522v, L2 single-scale alignment" loading="lazy"></a><figcaption>01522v</figcaption></figure>
+<figure><a href="media/l2_results/single_scale_alignment/01597v.jpg"><img src="media/l2_results/single_scale_alignment/01597v.jpg" alt="01597v, L2 single-scale alignment" loading="lazy"></a><figcaption>01597v</figcaption></figure>
+<figure><a href="media/l2_results/single_scale_alignment/01598v.jpg"><img src="media/l2_results/single_scale_alignment/01598v.jpg" alt="01598v, L2 single-scale alignment" loading="lazy"></a><figcaption>01598v</figcaption></figure>
+<figure><a href="media/l2_results/single_scale_alignment/01657u.jpg"><img src="media/l2_results/single_scale_alignment/01657u.jpg" alt="01657u, L2 single-scale alignment" loading="lazy"></a><figcaption>01657u</figcaption></figure>
+<figure><a href="media/l2_results/single_scale_alignment/01725u.jpg"><img src="media/l2_results/single_scale_alignment/01725u.jpg" alt="01725u, L2 single-scale alignment" loading="lazy"></a><figcaption>01725u</figcaption></figure>
+<figure><a href="media/l2_results/single_scale_alignment/01728v.jpg"><img src="media/l2_results/single_scale_alignment/01728v.jpg" alt="01728v, L2 single-scale alignment" loading="lazy"></a><figcaption>01728v</figcaption></figure>
+<figure><a href="media/l2_results/single_scale_alignment/01861a.jpg"><img src="media/l2_results/single_scale_alignment/01861a.jpg" alt="01861a, L2 single-scale alignment" loading="lazy"></a><figcaption>01861a</figcaption></figure>
+<figure><a href="media/l2_results/single_scale_alignment/10131v.jpg"><img src="media/l2_results/single_scale_alignment/10131v.jpg" alt="10131v, L2 single-scale alignment" loading="lazy"></a><figcaption>10131v</figcaption></figure>
+<figure><a href="media/l2_results/single_scale_alignment/31421v.jpg"><img src="media/l2_results/single_scale_alignment/31421v.jpg" alt="31421v, L2 single-scale alignment" loading="lazy"></a><figcaption>31421v</figcaption></figure>
+<figure><a href="media/l2_results/single_scale_alignment/emir.jpg"><img src="media/l2_results/single_scale_alignment/emir.jpg" alt="emir, L2 single-scale alignment" loading="lazy"></a><figcaption>emir</figcaption></figure>
+</div>
+<p class="top"><a href="#top">Back to top</a></p>
+<h3 id="l2-multi_scale_alignment">Multi-Scale Alignment</h3>
+<div class="row gallery">
+<figure><a href="media/l2_results/multi_scale_alignment/00056v.jpg"><img src="media/l2_results/multi_scale_alignment/00056v.jpg" alt="00056v, L2 multi-scale alignment" loading="lazy"></a><figcaption>00056v</figcaption></figure>
+<figure><a href="media/l2_results/multi_scale_alignment/00125v.jpg"><img src="media/l2_results/multi_scale_alignment/00125v.jpg" alt="00125v, L2 multi-scale alignment" loading="lazy"></a><figcaption>00125v</figcaption></figure>
+<figure><a href="media/l2_results/multi_scale_alignment/00163v.jpg"><img src="media/l2_results/multi_scale_alignment/00163v.jpg" alt="00163v, L2 multi-scale alignment" loading="lazy"></a><figcaption>00163v</figcaption></figure>
+<figure><a href="media/l2_results/multi_scale_alignment/00458u.jpg"><img src="media/l2_results/multi_scale_alignment/00458u.jpg" alt="00458u, L2 multi-scale alignment" loading="lazy"></a><figcaption>00458u</figcaption></figure>
+<figure><a href="media/l2_results/multi_scale_alignment/00804v.jpg"><img src="media/l2_results/multi_scale_alignment/00804v.jpg" alt="00804v, L2 multi-scale alignment" loading="lazy"></a><figcaption>00804v</figcaption></figure>
+<figure><a href="media/l2_results/multi_scale_alignment/01007a.jpg"><img src="media/l2_results/multi_scale_alignment/01007a.jpg" alt="01007a, L2 multi-scale alignment" loading="lazy"></a><figcaption>01007a</figcaption></figure>
+<figure><a href="media/l2_results/multi_scale_alignment/01047u.jpg"><img src="media/l2_results/multi_scale_alignment/01047u.jpg" alt="01047u, L2 multi-scale alignment" loading="lazy"></a><figcaption>01047u</figcaption></figure>
+<figure><a href="media/l2_results/multi_scale_alignment/01164v.jpg"><img src="media/l2_results/multi_scale_alignment/01164v.jpg" alt="01164v, L2 multi-scale alignment" loading="lazy"></a><figcaption>01164v</figcaption></figure>
+<figure><a href="media/l2_results/multi_scale_alignment/01269v.jpg"><img src="media/l2_results/multi_scale_alignment/01269v.jpg" alt="01269v, L2 multi-scale alignment" loading="lazy"></a><figcaption>01269v</figcaption></figure>
+<figure><a href="media/l2_results/multi_scale_alignment/01522v.jpg"><img src="media/l2_results/multi_scale_alignment/01522v.jpg" alt="01522v, L2 multi-scale alignment" loading="lazy"></a><figcaption>01522v</figcaption></figure>
+<figure><a href="media/l2_results/multi_scale_alignment/01597v.jpg"><img src="media/l2_results/multi_scale_alignment/01597v.jpg" alt="01597v, L2 multi-scale alignment" loading="lazy"></a><figcaption>01597v</figcaption></figure>
+<figure><a href="media/l2_results/multi_scale_alignment/01598v.jpg"><img src="media/l2_results/multi_scale_alignment/01598v.jpg" alt="01598v, L2 multi-scale alignment" loading="lazy"></a><figcaption>01598v</figcaption></figure>
+<figure><a href="media/l2_results/multi_scale_alignment/01657u.jpg"><img src="media/l2_results/multi_scale_alignment/01657u.jpg" alt="01657u, L2 multi-scale alignment" loading="lazy"></a><figcaption>01657u</figcaption></figure>
+<figure><a href="media/l2_results/multi_scale_alignment/01725u.jpg"><img src="media/l2_results/multi_scale_alignment/01725u.jpg" alt="01725u, L2 multi-scale alignment" loading="lazy"></a><figcaption>01725u</figcaption></figure>
+<figure><a href="media/l2_results/multi_scale_alignment/01728v.jpg"><img src="media/l2_results/multi_scale_alignment/01728v.jpg" alt="01728v, L2 multi-scale alignment" loading="lazy"></a><figcaption>01728v</figcaption></figure>
+<figure><a href="media/l2_results/multi_scale_alignment/01861a.jpg"><img src="media/l2_results/multi_scale_alignment/01861a.jpg" alt="01861a, L2 multi-scale alignment" loading="lazy"></a><figcaption>01861a</figcaption></figure>
+<figure><a href="media/l2_results/multi_scale_alignment/10131v.jpg"><img src="media/l2_results/multi_scale_alignment/10131v.jpg" alt="10131v, L2 multi-scale alignment" loading="lazy"></a><figcaption>10131v</figcaption></figure>
+<figure><a href="media/l2_results/multi_scale_alignment/31421v.jpg"><img src="media/l2_results/multi_scale_alignment/31421v.jpg" alt="31421v, L2 multi-scale alignment" loading="lazy"></a><figcaption>31421v</figcaption></figure>
+<figure><a href="media/l2_results/multi_scale_alignment/emir.jpg"><img src="media/l2_results/multi_scale_alignment/emir.jpg" alt="emir, L2 multi-scale alignment" loading="lazy"></a><figcaption>emir</figcaption></figure>
+</div>
+<p class="top"><a href="#top">Back to top</a></p>
+<h3 id="l2-gradient_alignment">Gradient Alignment</h3>
+<div class="row gallery">
+<figure><a href="media/l2_results/gradient_alignment/00056v.jpg"><img src="media/l2_results/gradient_alignment/00056v.jpg" alt="00056v, L2 gradient alignment" loading="lazy"></a><figcaption>00056v</figcaption></figure>
+<figure><a href="media/l2_results/gradient_alignment/00125v.jpg"><img src="media/l2_results/gradient_alignment/00125v.jpg" alt="00125v, L2 gradient alignment" loading="lazy"></a><figcaption>00125v</figcaption></figure>
+<figure><a href="media/l2_results/gradient_alignment/00163v.jpg"><img src="media/l2_results/gradient_alignment/00163v.jpg" alt="00163v, L2 gradient alignment" loading="lazy"></a><figcaption>00163v</figcaption></figure>
+<figure><a href="media/l2_results/gradient_alignment/00458u.jpg"><img src="media/l2_results/gradient_alignment/00458u.jpg" alt="00458u, L2 gradient alignment" loading="lazy"></a><figcaption>00458u</figcaption></figure>
+<figure><a href="media/l2_results/gradient_alignment/00804v.jpg"><img src="media/l2_results/gradient_alignment/00804v.jpg" alt="00804v, L2 gradient alignment" loading="lazy"></a><figcaption>00804v</figcaption></figure>
+<figure><a href="media/l2_results/gradient_alignment/01007a.jpg"><img src="media/l2_results/gradient_alignment/01007a.jpg" alt="01007a, L2 gradient alignment" loading="lazy"></a><figcaption>01007a</figcaption></figure>
+<figure><a href="media/l2_results/gradient_alignment/01047u.jpg"><img src="media/l2_results/gradient_alignment/01047u.jpg" alt="01047u, L2 gradient alignment" loading="lazy"></a><figcaption>01047u</figcaption></figure>
+<figure><a href="media/l2_results/gradient_alignment/01164v.jpg"><img src="media/l2_results/gradient_alignment/01164v.jpg" alt="01164v, L2 gradient alignment" loading="lazy"></a><figcaption>01164v</figcaption></figure>
+<figure><a href="media/l2_results/gradient_alignment/01269v.jpg"><img src="media/l2_results/gradient_alignment/01269v.jpg" alt="01269v, L2 gradient alignment" loading="lazy"></a><figcaption>01269v</figcaption></figure>
+<figure><a href="media/l2_results/gradient_alignment/01522v.jpg"><img src="media/l2_results/gradient_alignment/01522v.jpg" alt="01522v, L2 gradient alignment" loading="lazy"></a><figcaption>01522v</figcaption></figure>
+<figure><a href="media/l2_results/gradient_alignment/01597v.jpg"><img src="media/l2_results/gradient_alignment/01597v.jpg" alt="01597v, L2 gradient alignment" loading="lazy"></a><figcaption>01597v</figcaption></figure>
+<figure><a href="media/l2_results/gradient_alignment/01598v.jpg"><img src="media/l2_results/gradient_alignment/01598v.jpg" alt="01598v, L2 gradient alignment" loading="lazy"></a><figcaption>01598v</figcaption></figure>
+<figure><a href="media/l2_results/gradient_alignment/01657u.jpg"><img src="media/l2_results/gradient_alignment/01657u.jpg" alt="01657u, L2 gradient alignment" loading="lazy"></a><figcaption>01657u</figcaption></figure>
+<figure><a href="media/l2_results/gradient_alignment/01725u.jpg"><img src="media/l2_results/gradient_alignment/01725u.jpg" alt="01725u, L2 gradient alignment" loading="lazy"></a><figcaption>01725u</figcaption></figure>
+<figure><a href="media/l2_results/gradient_alignment/01728v.jpg"><img src="media/l2_results/gradient_alignment/01728v.jpg" alt="01728v, L2 gradient alignment" loading="lazy"></a><figcaption>01728v</figcaption></figure>
+<figure><a href="media/l2_results/gradient_alignment/01861a.jpg"><img src="media/l2_results/gradient_alignment/01861a.jpg" alt="01861a, L2 gradient alignment" loading="lazy"></a><figcaption>01861a</figcaption></figure>
+<figure><a href="media/l2_results/gradient_alignment/10131v.jpg"><img src="media/l2_results/gradient_alignment/10131v.jpg" alt="10131v, L2 gradient alignment" loading="lazy"></a><figcaption>10131v</figcaption></figure>
+<figure><a href="media/l2_results/gradient_alignment/31421v.jpg"><img src="media/l2_results/gradient_alignment/31421v.jpg" alt="31421v, L2 gradient alignment" loading="lazy"></a><figcaption>31421v</figcaption></figure>
+<figure><a href="media/l2_results/gradient_alignment/emir.jpg"><img src="media/l2_results/gradient_alignment/emir.jpg" alt="emir, L2 gradient alignment" loading="lazy"></a><figcaption>emir</figcaption></figure>
+</div>
+<p class="top"><a href="#top">Back to top</a></p>
+<h3 id="l2-crop_from_shift">Crop From Shifts</h3>
+<div class="row gallery">
+<figure><a href="media/l2_results/crop_from_shift/00056v.jpg"><img src="media/l2_results/crop_from_shift/00056v.jpg" alt="00056v, L2 crop from shifts" loading="lazy"></a><figcaption>00056v</figcaption></figure>
+<figure><a href="media/l2_results/crop_from_shift/00125v.jpg"><img src="media/l2_results/crop_from_shift/00125v.jpg" alt="00125v, L2 crop from shifts" loading="lazy"></a><figcaption>00125v</figcaption></figure>
+<figure><a href="media/l2_results/crop_from_shift/00163v.jpg"><img src="media/l2_results/crop_from_shift/00163v.jpg" alt="00163v, L2 crop from shifts" loading="lazy"></a><figcaption>00163v</figcaption></figure>
+<figure><a href="media/l2_results/crop_from_shift/00458u.jpg"><img src="media/l2_results/crop_from_shift/00458u.jpg" alt="00458u, L2 crop from shifts" loading="lazy"></a><figcaption>00458u</figcaption></figure>
+<figure><a href="media/l2_results/crop_from_shift/00804v.jpg"><img src="media/l2_results/crop_from_shift/00804v.jpg" alt="00804v, L2 crop from shifts" loading="lazy"></a><figcaption>00804v</figcaption></figure>
+<figure><a href="media/l2_results/crop_from_shift/01007a.jpg"><img src="media/l2_results/crop_from_shift/01007a.jpg" alt="01007a, L2 crop from shifts" loading="lazy"></a><figcaption>01007a</figcaption></figure>
+<figure><a href="media/l2_results/crop_from_shift/01047u.jpg"><img src="media/l2_results/crop_from_shift/01047u.jpg" alt="01047u, L2 crop from shifts" loading="lazy"></a><figcaption>01047u</figcaption></figure>
+<figure><a href="media/l2_results/crop_from_shift/01164v.jpg"><img src="media/l2_results/crop_from_shift/01164v.jpg" alt="01164v, L2 crop from shifts" loading="lazy"></a><figcaption>01164v</figcaption></figure>
+<figure><a href="media/l2_results/crop_from_shift/01269v.jpg"><img src="media/l2_results/crop_from_shift/01269v.jpg" alt="01269v, L2 crop from shifts" loading="lazy"></a><figcaption>01269v</figcaption></figure>
+<figure><a href="media/l2_results/crop_from_shift/01522v.jpg"><img src="media/l2_results/crop_from_shift/01522v.jpg" alt="01522v, L2 crop from shifts" loading="lazy"></a><figcaption>01522v</figcaption></figure>
+<figure><a href="media/l2_results/crop_from_shift/01597v.jpg"><img src="media/l2_results/crop_from_shift/01597v.jpg" alt="01597v, L2 crop from shifts" loading="lazy"></a><figcaption>01597v</figcaption></figure>
+<figure><a href="media/l2_results/crop_from_shift/01598v.jpg"><img src="media/l2_results/crop_from_shift/01598v.jpg" alt="01598v, L2 crop from shifts" loading="lazy"></a><figcaption>01598v</figcaption></figure>
+<figure><a href="media/l2_results/crop_from_shift/01657u.jpg"><img src="media/l2_results/crop_from_shift/01657u.jpg" alt="01657u, L2 crop from shifts" loading="lazy"></a><figcaption>01657u</figcaption></figure>
+<figure><a href="media/l2_results/crop_from_shift/01725u.jpg"><img src="media/l2_results/crop_from_shift/01725u.jpg" alt="01725u, L2 crop from shifts" loading="lazy"></a><figcaption>01725u</figcaption></figure>
+<figure><a href="media/l2_results/crop_from_shift/01728v.jpg"><img src="media/l2_results/crop_from_shift/01728v.jpg" alt="01728v, L2 crop from shifts" loading="lazy"></a><figcaption>01728v</figcaption></figure>
+<figure><a href="media/l2_results/crop_from_shift/01861a.jpg"><img src="media/l2_results/crop_from_shift/01861a.jpg" alt="01861a, L2 crop from shifts" loading="lazy"></a><figcaption>01861a</figcaption></figure>
+<figure><a href="media/l2_results/crop_from_shift/10131v.jpg"><img src="media/l2_results/crop_from_shift/10131v.jpg" alt="10131v, L2 crop from shifts" loading="lazy"></a><figcaption>10131v</figcaption></figure>
+<figure><a href="media/l2_results/crop_from_shift/31421v.jpg"><img src="media/l2_results/crop_from_shift/31421v.jpg" alt="31421v, L2 crop from shifts" loading="lazy"></a><figcaption>31421v</figcaption></figure>
+<figure><a href="media/l2_results/crop_from_shift/emir.jpg"><img src="media/l2_results/crop_from_shift/emir.jpg" alt="emir, L2 crop from shifts" loading="lazy"></a><figcaption>emir</figcaption></figure>
+</div>
+<p class="top"><a href="#top">Back to top</a></p>
+<h3 id="l2-auto_crop">Auto Crop</h3>
+<div class="row gallery">
+<figure><a href="media/l2_results/auto_crop/00056v.jpg"><img src="media/l2_results/auto_crop/00056v.jpg" alt="00056v, L2 auto crop" loading="lazy"></a><figcaption>00056v</figcaption></figure>
+<figure><a href="media/l2_results/auto_crop/00125v.jpg"><img src="media/l2_results/auto_crop/00125v.jpg" alt="00125v, L2 auto crop" loading="lazy"></a><figcaption>00125v</figcaption></figure>
+<figure><a href="media/l2_results/auto_crop/00163v.jpg"><img src="media/l2_results/auto_crop/00163v.jpg" alt="00163v, L2 auto crop" loading="lazy"></a><figcaption>00163v</figcaption></figure>
+<figure><a href="media/l2_results/auto_crop/00458u.jpg"><img src="media/l2_results/auto_crop/00458u.jpg" alt="00458u, L2 auto crop" loading="lazy"></a><figcaption>00458u</figcaption></figure>
+<figure><a href="media/l2_results/auto_crop/00804v.jpg"><img src="media/l2_results/auto_crop/00804v.jpg" alt="00804v, L2 auto crop" loading="lazy"></a><figcaption>00804v</figcaption></figure>
+<figure><a href="media/l2_results/auto_crop/01007a.jpg"><img src="media/l2_results/auto_crop/01007a.jpg" alt="01007a, L2 auto crop" loading="lazy"></a><figcaption>01007a</figcaption></figure>
+<figure><a href="media/l2_results/auto_crop/01047u.jpg"><img src="media/l2_results/auto_crop/01047u.jpg" alt="01047u, L2 auto crop" loading="lazy"></a><figcaption>01047u</figcaption></figure>
+<figure><a href="media/l2_results/auto_crop/01164v.jpg"><img src="media/l2_results/auto_crop/01164v.jpg" alt="01164v, L2 auto crop" loading="lazy"></a><figcaption>01164v</figcaption></figure>
+<figure><a href="media/l2_results/auto_crop/01269v.jpg"><img src="media/l2_results/auto_crop/01269v.jpg" alt="01269v, L2 auto crop" loading="lazy"></a><figcaption>01269v</figcaption></figure>
+<figure><a href="media/l2_results/auto_crop/01522v.jpg"><img src="media/l2_results/auto_crop/01522v.jpg" alt="01522v, L2 auto crop" loading="lazy"></a><figcaption>01522v</figcaption></figure>
+<figure><a href="media/l2_results/auto_crop/01597v.jpg"><img src="media/l2_results/auto_crop/01597v.jpg" alt="01597v, L2 auto crop" loading="lazy"></a><figcaption>01597v</figcaption></figure>
+<figure><a href="media/l2_results/auto_crop/01598v.jpg"><img src="media/l2_results/auto_crop/01598v.jpg" alt="01598v, L2 auto crop" loading="lazy"></a><figcaption>01598v</figcaption></figure>
+<figure><a href="media/l2_results/auto_crop/01657u.jpg"><img src="media/l2_results/auto_crop/01657u.jpg" alt="01657u, L2 auto crop" loading="lazy"></a><figcaption>01657u</figcaption></figure>
+<figure><a href="media/l2_results/auto_crop/01725u.jpg"><img src="media/l2_results/auto_crop/01725u.jpg" alt="01725u, L2 auto crop" loading="lazy"></a><figcaption>01725u</figcaption></figure>
+<figure><a href="media/l2_results/auto_crop/01728v.jpg"><img src="media/l2_results/auto_crop/01728v.jpg" alt="01728v, L2 auto crop" loading="lazy"></a><figcaption>01728v</figcaption></figure>
+<figure><a href="media/l2_results/auto_crop/01861a.jpg"><img src="media/l2_results/auto_crop/01861a.jpg" alt="01861a, L2 auto crop" loading="lazy"></a><figcaption>01861a</figcaption></figure>
+<figure><a href="media/l2_results/auto_crop/10131v.jpg"><img src="media/l2_results/auto_crop/10131v.jpg" alt="10131v, L2 auto crop" loading="lazy"></a><figcaption>10131v</figcaption></figure>
+<figure><a href="media/l2_results/auto_crop/31421v.jpg"><img src="media/l2_results/auto_crop/31421v.jpg" alt="31421v, L2 auto crop" loading="lazy"></a><figcaption>31421v</figcaption></figure>
+<figure><a href="media/l2_results/auto_crop/emir.jpg"><img src="media/l2_results/auto_crop/emir.jpg" alt="emir, L2 auto crop" loading="lazy"></a><figcaption>emir</figcaption></figure>
+</div>
+<p class="top"><a href="#top">Back to top</a></p>
+<h3 id="l2-auto_contrast">Auto Contrast</h3>
+<div class="row gallery">
+<figure><a href="media/l2_results/auto_contrast/00056v.jpg"><img src="media/l2_results/auto_contrast/00056v.jpg" alt="00056v, L2 auto contrast" loading="lazy"></a><figcaption>00056v</figcaption></figure>
+<figure><a href="media/l2_results/auto_contrast/00125v.jpg"><img src="media/l2_results/auto_contrast/00125v.jpg" alt="00125v, L2 auto contrast" loading="lazy"></a><figcaption>00125v</figcaption></figure>
+<figure><a href="media/l2_results/auto_contrast/00163v.jpg"><img src="media/l2_results/auto_contrast/00163v.jpg" alt="00163v, L2 auto contrast" loading="lazy"></a><figcaption>00163v</figcaption></figure>
+<figure><a href="media/l2_results/auto_contrast/00458u.jpg"><img src="media/l2_results/auto_contrast/00458u.jpg" alt="00458u, L2 auto contrast" loading="lazy"></a><figcaption>00458u</figcaption></figure>
+<figure><a href="media/l2_results/auto_contrast/00804v.jpg"><img src="media/l2_results/auto_contrast/00804v.jpg" alt="00804v, L2 auto contrast" loading="lazy"></a><figcaption>00804v</figcaption></figure>
+<figure><a href="media/l2_results/auto_contrast/01007a.jpg"><img src="media/l2_results/auto_contrast/01007a.jpg" alt="01007a, L2 auto contrast" loading="lazy"></a><figcaption>01007a</figcaption></figure>
+<figure><a href="media/l2_results/auto_contrast/01047u.jpg"><img src="media/l2_results/auto_contrast/01047u.jpg" alt="01047u, L2 auto contrast" loading="lazy"></a><figcaption>01047u</figcaption></figure>
+<figure><a href="media/l2_results/auto_contrast/01164v.jpg"><img src="media/l2_results/auto_contrast/01164v.jpg" alt="01164v, L2 auto contrast" loading="lazy"></a><figcaption>01164v</figcaption></figure>
+<figure><a href="media/l2_results/auto_contrast/01269v.jpg"><img src="media/l2_results/auto_contrast/01269v.jpg" alt="01269v, L2 auto contrast" loading="lazy"></a><figcaption>01269v</figcaption></figure>
+<figure><a href="media/l2_results/auto_contrast/01522v.jpg"><img src="media/l2_results/auto_contrast/01522v.jpg" alt="01522v, L2 auto contrast" loading="lazy"></a><figcaption>01522v</figcaption></figure>
+<figure><a href="media/l2_results/auto_contrast/01597v.jpg"><img src="media/l2_results/auto_contrast/01597v.jpg" alt="01597v, L2 auto contrast" loading="lazy"></a><figcaption>01597v</figcaption></figure>
+<figure><a href="media/l2_results/auto_contrast/01598v.jpg"><img src="media/l2_results/auto_contrast/01598v.jpg" alt="01598v, L2 auto contrast" loading="lazy"></a><figcaption>01598v</figcaption></figure>
+<figure><a href="media/l2_results/auto_contrast/01657u.jpg"><img src="media/l2_results/auto_contrast/01657u.jpg" alt="01657u, L2 auto contrast" loading="lazy"></a><figcaption>01657u</figcaption></figure>
+<figure><a href="media/l2_results/auto_contrast/01725u.jpg"><img src="media/l2_results/auto_contrast/01725u.jpg" alt="01725u, L2 auto contrast" loading="lazy"></a><figcaption>01725u</figcaption></figure>
+<figure><a href="media/l2_results/auto_contrast/01728v.jpg"><img src="media/l2_results/auto_contrast/01728v.jpg" alt="01728v, L2 auto contrast" loading="lazy"></a><figcaption>01728v</figcaption></figure>
+<figure><a href="media/l2_results/auto_contrast/01861a.jpg"><img src="media/l2_results/auto_contrast/01861a.jpg" alt="01861a, L2 auto contrast" loading="lazy"></a><figcaption>01861a</figcaption></figure>
+<figure><a href="media/l2_results/auto_contrast/10131v.jpg"><img src="media/l2_results/auto_contrast/10131v.jpg" alt="10131v, L2 auto contrast" loading="lazy"></a><figcaption>10131v</figcaption></figure>
+<figure><a href="media/l2_results/auto_contrast/31421v.jpg"><img src="media/l2_results/auto_contrast/31421v.jpg" alt="31421v, L2 auto contrast" loading="lazy"></a><figcaption>31421v</figcaption></figure>
+<figure><a href="media/l2_results/auto_contrast/emir.jpg"><img src="media/l2_results/auto_contrast/emir.jpg" alt="emir, L2 auto contrast" loading="lazy"></a><figcaption>emir</figcaption></figure>
+</div>
+<p class="top"><a href="#top">Back to top</a></p>
+<h2 id="ncc">NCC (Normalized Cross Correlation)</h2>
+<h3 id="ncc-single_scale_alignment">Single-Scale Alignment</h3>
+<div class="row gallery">
+<figure><a href="media/ncc_results/single_scale_alignment/00056v.jpg"><img src="media/ncc_results/single_scale_alignment/00056v.jpg" alt="00056v, NCC single-scale alignment" loading="lazy"></a><figcaption>00056v</figcaption></figure>
+<figure><a href="media/ncc_results/single_scale_alignment/00125v.jpg"><img src="media/ncc_results/single_scale_alignment/00125v.jpg" alt="00125v, NCC single-scale alignment" loading="lazy"></a><figcaption>00125v</figcaption></figure>
+<figure><a href="media/ncc_results/single_scale_alignment/00163v.jpg"><img src="media/ncc_results/single_scale_alignment/00163v.jpg" alt="00163v, NCC single-scale alignment" loading="lazy"></a><figcaption>00163v</figcaption></figure>
+<figure><a href="media/ncc_results/single_scale_alignment/00458u.jpg"><img src="media/ncc_results/single_scale_alignment/00458u.jpg" alt="00458u, NCC single-scale alignment" loading="lazy"></a><figcaption>00458u</figcaption></figure>
+<figure><a href="media/ncc_results/single_scale_alignment/00804v.jpg"><img src="media/ncc_results/single_scale_alignment/00804v.jpg" alt="00804v, NCC single-scale alignment" loading="lazy"></a><figcaption>00804v</figcaption></figure>
+<figure><a href="media/ncc_results/single_scale_alignment/01007a.jpg"><img src="media/ncc_results/single_scale_alignment/01007a.jpg" alt="01007a, NCC single-scale alignment" loading="lazy"></a><figcaption>01007a</figcaption></figure>
+<figure><a href="media/ncc_results/single_scale_alignment/01047u.jpg"><img src="media/ncc_results/single_scale_alignment/01047u.jpg" alt="01047u, NCC single-scale alignment" loading="lazy"></a><figcaption>01047u</figcaption></figure>
+<figure><a href="media/ncc_results/single_scale_alignment/01164v.jpg"><img src="media/ncc_results/single_scale_alignment/01164v.jpg" alt="01164v, NCC single-scale alignment" loading="lazy"></a><figcaption>01164v</figcaption></figure>
+<figure><a href="media/ncc_results/single_scale_alignment/01269v.jpg"><img src="media/ncc_results/single_scale_alignment/01269v.jpg" alt="01269v, NCC single-scale alignment" loading="lazy"></a><figcaption>01269v</figcaption></figure>
+<figure><a href="media/ncc_results/single_scale_alignment/01522v.jpg"><img src="media/ncc_results/single_scale_alignment/01522v.jpg" alt="01522v, NCC single-scale alignment" loading="lazy"></a><figcaption>01522v</figcaption></figure>
+<figure><a href="media/ncc_results/single_scale_alignment/01597v.jpg"><img src="media/ncc_results/single_scale_alignment/01597v.jpg" alt="01597v, NCC single-scale alignment" loading="lazy"></a><figcaption>01597v</figcaption></figure>
+<figure><a href="media/ncc_results/single_scale_alignment/01598v.jpg"><img src="media/ncc_results/single_scale_alignment/01598v.jpg" alt="01598v, NCC single-scale alignment" loading="lazy"></a><figcaption>01598v</figcaption></figure>
+<figure><a href="media/ncc_results/single_scale_alignment/01657u.jpg"><img src="media/ncc_results/single_scale_alignment/01657u.jpg" alt="01657u, NCC single-scale alignment" loading="lazy"></a><figcaption>01657u</figcaption></figure>
+<figure><a href="media/ncc_results/single_scale_alignment/01725u.jpg"><img src="media/ncc_results/single_scale_alignment/01725u.jpg" alt="01725u, NCC single-scale alignment" loading="lazy"></a><figcaption>01725u</figcaption></figure>
+<figure><a href="media/ncc_results/single_scale_alignment/01728v.jpg"><img src="media/ncc_results/single_scale_alignment/01728v.jpg" alt="01728v, NCC single-scale alignment" loading="lazy"></a><figcaption>01728v</figcaption></figure>
+<figure><a href="media/ncc_results/single_scale_alignment/01861a.jpg"><img src="media/ncc_results/single_scale_alignment/01861a.jpg" alt="01861a, NCC single-scale alignment" loading="lazy"></a><figcaption>01861a</figcaption></figure>
+<figure><a href="media/ncc_results/single_scale_alignment/10131v.jpg"><img src="media/ncc_results/single_scale_alignment/10131v.jpg" alt="10131v, NCC single-scale alignment" loading="lazy"></a><figcaption>10131v</figcaption></figure>
+<figure><a href="media/ncc_results/single_scale_alignment/31421v.jpg"><img src="media/ncc_results/single_scale_alignment/31421v.jpg" alt="31421v, NCC single-scale alignment" loading="lazy"></a><figcaption>31421v</figcaption></figure>
+<figure><a href="media/ncc_results/single_scale_alignment/emir.jpg"><img src="media/ncc_results/single_scale_alignment/emir.jpg" alt="emir, NCC single-scale alignment" loading="lazy"></a><figcaption>emir</figcaption></figure>
+</div>
+<p class="top"><a href="#top">Back to top</a></p>
+<h3 id="ncc-multi_scale_alignment">Multi-Scale Alignment</h3>
+<div class="row gallery">
+<figure><a href="media/ncc_results/multi_scale_alignment/00056v.jpg"><img src="media/ncc_results/multi_scale_alignment/00056v.jpg" alt="00056v, NCC multi-scale alignment" loading="lazy"></a><figcaption>00056v</figcaption></figure>
+<figure><a href="media/ncc_results/multi_scale_alignment/00125v.jpg"><img src="media/ncc_results/multi_scale_alignment/00125v.jpg" alt="00125v, NCC multi-scale alignment" loading="lazy"></a><figcaption>00125v</figcaption></figure>
+<figure><a href="media/ncc_results/multi_scale_alignment/00163v.jpg"><img src="media/ncc_results/multi_scale_alignment/00163v.jpg" alt="00163v, NCC multi-scale alignment" loading="lazy"></a><figcaption>00163v</figcaption></figure>
+<figure><a href="media/ncc_results/multi_scale_alignment/00458u.jpg"><img src="media/ncc_results/multi_scale_alignment/00458u.jpg" alt="00458u, NCC multi-scale alignment" loading="lazy"></a><figcaption>00458u</figcaption></figure>
+<figure><a href="media/ncc_results/multi_scale_alignment/00804v.jpg"><img src="media/ncc_results/multi_scale_alignment/00804v.jpg" alt="00804v, NCC multi-scale alignment" loading="lazy"></a><figcaption>00804v</figcaption></figure>
+<figure><a href="media/ncc_results/multi_scale_alignment/01007a.jpg"><img src="media/ncc_results/multi_scale_alignment/01007a.jpg" alt="01007a, NCC multi-scale alignment" loading="lazy"></a><figcaption>01007a</figcaption></figure>
+<figure><a href="media/ncc_results/multi_scale_alignment/01047u.jpg"><img src="media/ncc_results/multi_scale_alignment/01047u.jpg" alt="01047u, NCC multi-scale alignment" loading="lazy"></a><figcaption>01047u</figcaption></figure>
+<figure><a href="media/ncc_results/multi_scale_alignment/01164v.jpg"><img src="media/ncc_results/multi_scale_alignment/01164v.jpg" alt="01164v, NCC multi-scale alignment" loading="lazy"></a><figcaption>01164v</figcaption></figure>
+<figure><a href="media/ncc_results/multi_scale_alignment/01269v.jpg"><img src="media/ncc_results/multi_scale_alignment/01269v.jpg" alt="01269v, NCC multi-scale alignment" loading="lazy"></a><figcaption>01269v</figcaption></figure>
+<figure><a href="media/ncc_results/multi_scale_alignment/01522v.jpg"><img src="media/ncc_results/multi_scale_alignment/01522v.jpg" alt="01522v, NCC multi-scale alignment" loading="lazy"></a><figcaption>01522v</figcaption></figure>
+<figure><a href="media/ncc_results/multi_scale_alignment/01597v.jpg"><img src="media/ncc_results/multi_scale_alignment/01597v.jpg" alt="01597v, NCC multi-scale alignment" loading="lazy"></a><figcaption>01597v</figcaption></figure>
+<figure><a href="media/ncc_results/multi_scale_alignment/01598v.jpg"><img src="media/ncc_results/multi_scale_alignment/01598v.jpg" alt="01598v, NCC multi-scale alignment" loading="lazy"></a><figcaption>01598v</figcaption></figure>
+<figure><a href="media/ncc_results/multi_scale_alignment/01657u.jpg"><img src="media/ncc_results/multi_scale_alignment/01657u.jpg" alt="01657u, NCC multi-scale alignment" loading="lazy"></a><figcaption>01657u</figcaption></figure>
+<figure><a href="media/ncc_results/multi_scale_alignment/01725u.jpg"><img src="media/ncc_results/multi_scale_alignment/01725u.jpg" alt="01725u, NCC multi-scale alignment" loading="lazy"></a><figcaption>01725u</figcaption></figure>
+<figure><a href="media/ncc_results/multi_scale_alignment/01728v.jpg"><img src="media/ncc_results/multi_scale_alignment/01728v.jpg" alt="01728v, NCC multi-scale alignment" loading="lazy"></a><figcaption>01728v</figcaption></figure>
+<figure><a href="media/ncc_results/multi_scale_alignment/01861a.jpg"><img src="media/ncc_results/multi_scale_alignment/01861a.jpg" alt="01861a, NCC multi-scale alignment" loading="lazy"></a><figcaption>01861a</figcaption></figure>
+<figure><a href="media/ncc_results/multi_scale_alignment/10131v.jpg"><img src="media/ncc_results/multi_scale_alignment/10131v.jpg" alt="10131v, NCC multi-scale alignment" loading="lazy"></a><figcaption>10131v</figcaption></figure>
+<figure><a href="media/ncc_results/multi_scale_alignment/31421v.jpg"><img src="media/ncc_results/multi_scale_alignment/31421v.jpg" alt="31421v, NCC multi-scale alignment" loading="lazy"></a><figcaption>31421v</figcaption></figure>
+<figure><a href="media/ncc_results/multi_scale_alignment/emir.jpg"><img src="media/ncc_results/multi_scale_alignment/emir.jpg" alt="emir, NCC multi-scale alignment" loading="lazy"></a><figcaption>emir</figcaption></figure>
+</div>
+<p class="top"><a href="#top">Back to top</a></p>
+<h3 id="ncc-gradient_alignment">Gradient Alignment</h3>
+<div class="row gallery">
+<figure><a href="media/ncc_results/gradient_alignment/00056v.jpg"><img src="media/ncc_results/gradient_alignment/00056v.jpg" alt="00056v, NCC gradient alignment" loading="lazy"></a><figcaption>00056v</figcaption></figure>
+<figure><a href="media/ncc_results/gradient_alignment/00125v.jpg"><img src="media/ncc_results/gradient_alignment/00125v.jpg" alt="00125v, NCC gradient alignment" loading="lazy"></a><figcaption>00125v</figcaption></figure>
+<figure><a href="media/ncc_results/gradient_alignment/00163v.jpg"><img src="media/ncc_results/gradient_alignment/00163v.jpg" alt="00163v, NCC gradient alignment" loading="lazy"></a><figcaption>00163v</figcaption></figure>
+<figure><a href="media/ncc_results/gradient_alignment/00458u.jpg"><img src="media/ncc_results/gradient_alignment/00458u.jpg" alt="00458u, NCC gradient alignment" loading="lazy"></a><figcaption>00458u</figcaption></figure>
+<figure><a href="media/ncc_results/gradient_alignment/00804v.jpg"><img src="media/ncc_results/gradient_alignment/00804v.jpg" alt="00804v, NCC gradient alignment" loading="lazy"></a><figcaption>00804v</figcaption></figure>
+<figure><a href="media/ncc_results/gradient_alignment/01007a.jpg"><img src="media/ncc_results/gradient_alignment/01007a.jpg" alt="01007a, NCC gradient alignment" loading="lazy"></a><figcaption>01007a</figcaption></figure>
+<figure><a href="media/ncc_results/gradient_alignment/01047u.jpg"><img src="media/ncc_results/gradient_alignment/01047u.jpg" alt="01047u, NCC gradient alignment" loading="lazy"></a><figcaption>01047u</figcaption></figure>
+<figure><a href="media/ncc_results/gradient_alignment/01164v.jpg"><img src="media/ncc_results/gradient_alignment/01164v.jpg" alt="01164v, NCC gradient alignment" loading="lazy"></a><figcaption>01164v</figcaption></figure>
+<figure><a href="media/ncc_results/gradient_alignment/01269v.jpg"><img src="media/ncc_results/gradient_alignment/01269v.jpg" alt="01269v, NCC gradient alignment" loading="lazy"></a><figcaption>01269v</figcaption></figure>
+<figure><a href="media/ncc_results/gradient_alignment/01522v.jpg"><img src="media/ncc_results/gradient_alignment/01522v.jpg" alt="01522v, NCC gradient alignment" loading="lazy"></a><figcaption>01522v</figcaption></figure>
+<figure><a href="media/ncc_results/gradient_alignment/01597v.jpg"><img src="media/ncc_results/gradient_alignment/01597v.jpg" alt="01597v, NCC gradient alignment" loading="lazy"></a><figcaption>01597v</figcaption></figure>
+<figure><a href="media/ncc_results/gradient_alignment/01598v.jpg"><img src="media/ncc_results/gradient_alignment/01598v.jpg" alt="01598v, NCC gradient alignment" loading="lazy"></a><figcaption>01598v</figcaption></figure>
+<figure><a href="media/ncc_results/gradient_alignment/01657u.jpg"><img src="media/ncc_results/gradient_alignment/01657u.jpg" alt="01657u, NCC gradient alignment" loading="lazy"></a><figcaption>01657u</figcaption></figure>
+<figure><a href="media/ncc_results/gradient_alignment/01725u.jpg"><img src="media/ncc_results/gradient_alignment/01725u.jpg" alt="01725u, NCC gradient alignment" loading="lazy"></a><figcaption>01725u</figcaption></figure>
+<figure><a href="media/ncc_results/gradient_alignment/01728v.jpg"><img src="media/ncc_results/gradient_alignment/01728v.jpg" alt="01728v, NCC gradient alignment" loading="lazy"></a><figcaption>01728v</figcaption></figure>
+<figure><a href="media/ncc_results/gradient_alignment/01861a.jpg"><img src="media/ncc_results/gradient_alignment/01861a.jpg" alt="01861a, NCC gradient alignment" loading="lazy"></a><figcaption>01861a</figcaption></figure>
+<figure><a href="media/ncc_results/gradient_alignment/10131v.jpg"><img src="media/ncc_results/gradient_alignment/10131v.jpg" alt="10131v, NCC gradient alignment" loading="lazy"></a><figcaption>10131v</figcaption></figure>
+<figure><a href="media/ncc_results/gradient_alignment/31421v.jpg"><img src="media/ncc_results/gradient_alignment/31421v.jpg" alt="31421v, NCC gradient alignment" loading="lazy"></a><figcaption>31421v</figcaption></figure>
+<figure><a href="media/ncc_results/gradient_alignment/emir.jpg"><img src="media/ncc_results/gradient_alignment/emir.jpg" alt="emir, NCC gradient alignment" loading="lazy"></a><figcaption>emir</figcaption></figure>
+</div>
+<p class="top"><a href="#top">Back to top</a></p>
+<h3 id="ncc-crop_from_shift">Crop From Shifts</h3>
+<div class="row gallery">
+<figure><a href="media/ncc_results/crop_from_shift/00056v.jpg"><img src="media/ncc_results/crop_from_shift/00056v.jpg" alt="00056v, NCC crop from shifts" loading="lazy"></a><figcaption>00056v</figcaption></figure>
+<figure><a href="media/ncc_results/crop_from_shift/00125v.jpg"><img src="media/ncc_results/crop_from_shift/00125v.jpg" alt="00125v, NCC crop from shifts" loading="lazy"></a><figcaption>00125v</figcaption></figure>
+<figure><a href="media/ncc_results/crop_from_shift/00163v.jpg"><img src="media/ncc_results/crop_from_shift/00163v.jpg" alt="00163v, NCC crop from shifts" loading="lazy"></a><figcaption>00163v</figcaption></figure>
+<figure><a href="media/ncc_results/crop_from_shift/00458u.jpg"><img src="media/ncc_results/crop_from_shift/00458u.jpg" alt="00458u, NCC crop from shifts" loading="lazy"></a><figcaption>00458u</figcaption></figure>
+<figure><a href="media/ncc_results/crop_from_shift/00804v.jpg"><img src="media/ncc_results/crop_from_shift/00804v.jpg" alt="00804v, NCC crop from shifts" loading="lazy"></a><figcaption>00804v</figcaption></figure>
+<figure><a href="media/ncc_results/crop_from_shift/01007a.jpg"><img src="media/ncc_results/crop_from_shift/01007a.jpg" alt="01007a, NCC crop from shifts" loading="lazy"></a><figcaption>01007a</figcaption></figure>
+<figure><a href="media/ncc_results/crop_from_shift/01047u.jpg"><img src="media/ncc_results/crop_from_shift/01047u.jpg" alt="01047u, NCC crop from shifts" loading="lazy"></a><figcaption>01047u</figcaption></figure>
+<figure><a href="media/ncc_results/crop_from_shift/01164v.jpg"><img src="media/ncc_results/crop_from_shift/01164v.jpg" alt="01164v, NCC crop from shifts" loading="lazy"></a><figcaption>01164v</figcaption></figure>
+<figure><a href="media/ncc_results/crop_from_shift/01269v.jpg"><img src="media/ncc_results/crop_from_shift/01269v.jpg" alt="01269v, NCC crop from shifts" loading="lazy"></a><figcaption>01269v</figcaption></figure>
+<figure><a href="media/ncc_results/crop_from_shift/01522v.jpg"><img src="media/ncc_results/crop_from_shift/01522v.jpg" alt="01522v, NCC crop from shifts" loading="lazy"></a><figcaption>01522v</figcaption></figure>
+<figure><a href="media/ncc_results/crop_from_shift/01597v.jpg"><img src="media/ncc_results/crop_from_shift/01597v.jpg" alt="01597v, NCC crop from shifts" loading="lazy"></a><figcaption>01597v</figcaption></figure>
+<figure><a href="media/ncc_results/crop_from_shift/01598v.jpg"><img src="media/ncc_results/crop_from_shift/01598v.jpg" alt="01598v, NCC crop from shifts" loading="lazy"></a><figcaption>01598v</figcaption></figure>
+<figure><a href="media/ncc_results/crop_from_shift/01657u.jpg"><img src="media/ncc_results/crop_from_shift/01657u.jpg" alt="01657u, NCC crop from shifts" loading="lazy"></a><figcaption>01657u</figcaption></figure>
+<figure><a href="media/ncc_results/crop_from_shift/01725u.jpg"><img src="media/ncc_results/crop_from_shift/01725u.jpg" alt="01725u, NCC crop from shifts" loading="lazy"></a><figcaption>01725u</figcaption></figure>
+<figure><a href="media/ncc_results/crop_from_shift/01728v.jpg"><img src="media/ncc_results/crop_from_shift/01728v.jpg" alt="01728v, NCC crop from shifts" loading="lazy"></a><figcaption>01728v</figcaption></figure>
+<figure><a href="media/ncc_results/crop_from_shift/01861a.jpg"><img src="media/ncc_results/crop_from_shift/01861a.jpg" alt="01861a, NCC crop from shifts" loading="lazy"></a><figcaption>01861a</figcaption></figure>
+<figure><a href="media/ncc_results/crop_from_shift/10131v.jpg"><img src="media/ncc_results/crop_from_shift/10131v.jpg" alt="10131v, NCC crop from shifts" loading="lazy"></a><figcaption>10131v</figcaption></figure>
+<figure><a href="media/ncc_results/crop_from_shift/31421v.jpg"><img src="media/ncc_results/crop_from_shift/31421v.jpg" alt="31421v, NCC crop from shifts" loading="lazy"></a><figcaption>31421v</figcaption></figure>
+<figure><a href="media/ncc_results/crop_from_shift/emir.jpg"><img src="media/ncc_results/crop_from_shift/emir.jpg" alt="emir, NCC crop from shifts" loading="lazy"></a><figcaption>emir</figcaption></figure>
+</div>
+<p class="top"><a href="#top">Back to top</a></p>
+<h3 id="ncc-auto_crop">Auto Crop</h3>
+<div class="row gallery">
+<figure><a href="media/ncc_results/auto_crop/00056v.jpg"><img src="media/ncc_results/auto_crop/00056v.jpg" alt="00056v, NCC auto crop" loading="lazy"></a><figcaption>00056v</figcaption></figure>
+<figure><a href="media/ncc_results/auto_crop/00125v.jpg"><img src="media/ncc_results/auto_crop/00125v.jpg" alt="00125v, NCC auto crop" loading="lazy"></a><figcaption>00125v</figcaption></figure>
+<figure><a href="media/ncc_results/auto_crop/00163v.jpg"><img src="media/ncc_results/auto_crop/00163v.jpg" alt="00163v, NCC auto crop" loading="lazy"></a><figcaption>00163v</figcaption></figure>
+<figure><a href="media/ncc_results/auto_crop/00458u.jpg"><img src="media/ncc_results/auto_crop/00458u.jpg" alt="00458u, NCC auto crop" loading="lazy"></a><figcaption>00458u</figcaption></figure>
+<figure><a href="media/ncc_results/auto_crop/00804v.jpg"><img src="media/ncc_results/auto_crop/00804v.jpg" alt="00804v, NCC auto crop" loading="lazy"></a><figcaption>00804v</figcaption></figure>
+<figure><a href="media/ncc_results/auto_crop/01007a.jpg"><img src="media/ncc_results/auto_crop/01007a.jpg" alt="01007a, NCC auto crop" loading="lazy"></a><figcaption>01007a</figcaption></figure>
+<figure><a href="media/ncc_results/auto_crop/01047u.jpg"><img src="media/ncc_results/auto_crop/01047u.jpg" alt="01047u, NCC auto crop" loading="lazy"></a><figcaption>01047u</figcaption></figure>
+<figure><a href="media/ncc_results/auto_crop/01164v.jpg"><img src="media/ncc_results/auto_crop/01164v.jpg" alt="01164v, NCC auto crop" loading="lazy"></a><figcaption>01164v</figcaption></figure>
+<figure><a href="media/ncc_results/auto_crop/01269v.jpg"><img src="media/ncc_results/auto_crop/01269v.jpg" alt="01269v, NCC auto crop" loading="lazy"></a><figcaption>01269v</figcaption></figure>
+<figure><a href="media/ncc_results/auto_crop/01522v.jpg"><img src="media/ncc_results/auto_crop/01522v.jpg" alt="01522v, NCC auto crop" loading="lazy"></a><figcaption>01522v</figcaption></figure>
+<figure><a href="media/ncc_results/auto_crop/01597v.jpg"><img src="media/ncc_results/auto_crop/01597v.jpg" alt="01597v, NCC auto crop" loading="lazy"></a><figcaption>01597v</figcaption></figure>
+<figure><a href="media/ncc_results/auto_crop/01598v.jpg"><img src="media/ncc_results/auto_crop/01598v.jpg" alt="01598v, NCC auto crop" loading="lazy"></a><figcaption>01598v</figcaption></figure>
+<figure><a href="media/ncc_results/auto_crop/01657u.jpg"><img src="media/ncc_results/auto_crop/01657u.jpg" alt="01657u, NCC auto crop" loading="lazy"></a><figcaption>01657u</figcaption></figure>
+<figure><a href="media/ncc_results/auto_crop/01725u.jpg"><img src="media/ncc_results/auto_crop/01725u.jpg" alt="01725u, NCC auto crop" loading="lazy"></a><figcaption>01725u</figcaption></figure>
+<figure><a href="media/ncc_results/auto_crop/01728v.jpg"><img src="media/ncc_results/auto_crop/01728v.jpg" alt="01728v, NCC auto crop" loading="lazy"></a><figcaption>01728v</figcaption></figure>
+<figure><a href="media/ncc_results/auto_crop/01861a.jpg"><img src="media/ncc_results/auto_crop/01861a.jpg" alt="01861a, NCC auto crop" loading="lazy"></a><figcaption>01861a</figcaption></figure>
+<figure><a href="media/ncc_results/auto_crop/10131v.jpg"><img src="media/ncc_results/auto_crop/10131v.jpg" alt="10131v, NCC auto crop" loading="lazy"></a><figcaption>10131v</figcaption></figure>
+<figure><a href="media/ncc_results/auto_crop/31421v.jpg"><img src="media/ncc_results/auto_crop/31421v.jpg" alt="31421v, NCC auto crop" loading="lazy"></a><figcaption>31421v</figcaption></figure>
+<figure><a href="media/ncc_results/auto_crop/emir.jpg"><img src="media/ncc_results/auto_crop/emir.jpg" alt="emir, NCC auto crop" loading="lazy"></a><figcaption>emir</figcaption></figure>
+</div>
+<p class="top"><a href="#top">Back to top</a></p>
+<h3 id="ncc-auto_contrast">Auto Contrast</h3>
+<div class="row gallery">
+<figure><a href="media/ncc_results/auto_contrast/00056v.jpg"><img src="media/ncc_results/auto_contrast/00056v.jpg" alt="00056v, NCC auto contrast" loading="lazy"></a><figcaption>00056v</figcaption></figure>
+<figure><a href="media/ncc_results/auto_contrast/00125v.jpg"><img src="media/ncc_results/auto_contrast/00125v.jpg" alt="00125v, NCC auto contrast" loading="lazy"></a><figcaption>00125v</figcaption></figure>
+<figure><a href="media/ncc_results/auto_contrast/00163v.jpg"><img src="media/ncc_results/auto_contrast/00163v.jpg" alt="00163v, NCC auto contrast" loading="lazy"></a><figcaption>00163v</figcaption></figure>
+<figure><a href="media/ncc_results/auto_contrast/00458u.jpg"><img src="media/ncc_results/auto_contrast/00458u.jpg" alt="00458u, NCC auto contrast" loading="lazy"></a><figcaption>00458u</figcaption></figure>
+<figure><a href="media/ncc_results/auto_contrast/00804v.jpg"><img src="media/ncc_results/auto_contrast/00804v.jpg" alt="00804v, NCC auto contrast" loading="lazy"></a><figcaption>00804v</figcaption></figure>
+<figure><a href="media/ncc_results/auto_contrast/01007a.jpg"><img src="media/ncc_results/auto_contrast/01007a.jpg" alt="01007a, NCC auto contrast" loading="lazy"></a><figcaption>01007a</figcaption></figure>
+<figure><a href="media/ncc_results/auto_contrast/01047u.jpg"><img src="media/ncc_results/auto_contrast/01047u.jpg" alt="01047u, NCC auto contrast" loading="lazy"></a><figcaption>01047u</figcaption></figure>
+<figure><a href="media/ncc_results/auto_contrast/01164v.jpg"><img src="media/ncc_results/auto_contrast/01164v.jpg" alt="01164v, NCC auto contrast" loading="lazy"></a><figcaption>01164v</figcaption></figure>
+<figure><a href="media/ncc_results/auto_contrast/01269v.jpg"><img src="media/ncc_results/auto_contrast/01269v.jpg" alt="01269v, NCC auto contrast" loading="lazy"></a><figcaption>01269v</figcaption></figure>
+<figure><a href="media/ncc_results/auto_contrast/01522v.jpg"><img src="media/ncc_results/auto_contrast/01522v.jpg" alt="01522v, NCC auto contrast" loading="lazy"></a><figcaption>01522v</figcaption></figure>
+<figure><a href="media/ncc_results/auto_contrast/01597v.jpg"><img src="media/ncc_results/auto_contrast/01597v.jpg" alt="01597v, NCC auto contrast" loading="lazy"></a><figcaption>01597v</figcaption></figure>
+<figure><a href="media/ncc_results/auto_contrast/01598v.jpg"><img src="media/ncc_results/auto_contrast/01598v.jpg" alt="01598v, NCC auto contrast" loading="lazy"></a><figcaption>01598v</figcaption></figure>
+<figure><a href="media/ncc_results/auto_contrast/01657u.jpg"><img src="media/ncc_results/auto_contrast/01657u.jpg" alt="01657u, NCC auto contrast" loading="lazy"></a><figcaption>01657u</figcaption></figure>
+<figure><a href="media/ncc_results/auto_contrast/01725u.jpg"><img src="media/ncc_results/auto_contrast/01725u.jpg" alt="01725u, NCC auto contrast" loading="lazy"></a><figcaption>01725u</figcaption></figure>
+<figure><a href="media/ncc_results/auto_contrast/01728v.jpg"><img src="media/ncc_results/auto_contrast/01728v.jpg" alt="01728v, NCC auto contrast" loading="lazy"></a><figcaption>01728v</figcaption></figure>
+<figure><a href="media/ncc_results/auto_contrast/01861a.jpg"><img src="media/ncc_results/auto_contrast/01861a.jpg" alt="01861a, NCC auto contrast" loading="lazy"></a><figcaption>01861a</figcaption></figure>
+<figure><a href="media/ncc_results/auto_contrast/10131v.jpg"><img src="media/ncc_results/auto_contrast/10131v.jpg" alt="10131v, NCC auto contrast" loading="lazy"></a><figcaption>10131v</figcaption></figure>
+<figure><a href="media/ncc_results/auto_contrast/31421v.jpg"><img src="media/ncc_results/auto_contrast/31421v.jpg" alt="31421v, NCC auto contrast" loading="lazy"></a><figcaption>31421v</figcaption></figure>
+<figure><a href="media/ncc_results/auto_contrast/emir.jpg"><img src="media/ncc_results/auto_contrast/emir.jpg" alt="emir, NCC auto contrast" loading="lazy"></a><figcaption>emir</figcaption></figure>
+</div>
+<p class="top"><a href="#top">Back to top</a></p>
+
+</body>
+</html>

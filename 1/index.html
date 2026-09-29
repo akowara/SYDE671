@@ -1,14 +1,238 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Assignment 1</title>
 <style>
 body {
 font-family: Arial, sans-serif;
-margin: 20px;
+margin: 20px auto;
+max-width: 960px;
+padding: 0 16px;
+line-height: 1.5;
+color: #222;
 }
+h1 { margin-bottom: 0; }
+.subtitle { color: #666; margin-top: 4px; }
+h2 { border-bottom: 1px solid #ddd; padding-bottom: 4px; margin-top: 40px; }
+h3 { margin-top: 28px; }
+.row {
+display: flex;
+flex-wrap: wrap;
+gap: 16px;
+margin: 16px 0;
+}
+figure {
+flex: 1 1 280px;
+margin: 0;
+}
+figure img {
+width: 100%;
+display: block;
+}
+figcaption {
+font-size: 0.9em;
+color: #555;
+margin-top: 4px;
+}
+.black-bg {
+background: #000;
+padding: 8px;
+}
+.gallery figure { flex: 1 1 200px; max-width: 300px; }
 </style>
 </head>
 <body>
+
+<h1>SYDE671 - Assignment 1</h1>
+<p class="subtitle">Arthur Kowara</p>
+
+<h2>Preprocessing</h2>
+<p>The first step in the image processing was converting the image to grayscale to allow each plate
+to be a single array which allows for these image processing techniques. After an image is
+converted to grayscale the next step was to remove as much of the white border that surrounds
+the image strip. To accomplish this, initially each row and column that contained only white
+pixels to a certain threshold was removed from the image. The purpose of this was to make the
+image easier to split accurately into even thirds in the next steps and as well as remove some of
+the fluff of the borders which each raw image contains.</p>
+<p>A black background was added here to show the removal of the white border.</p>
+<div class="row">
+<figure class="black-bg" style="max-width: 280px;">
+<img src="media/data/emir.jpg" alt="Raw Emir plate strip with white border">
+<figcaption style="color:#ccc;">Before</figcaption>
+</figure>
+<figure class="black-bg" style="max-width: 280px;">
+<img src="media/ncc_results/border_removal/emir.jpg" alt="Emir plate strip with white border removed">
+<figcaption style="color:#ccc;">After</figcaption>
+</figure>
+</div>
+<p>The next step was to split the image into even thirds and this was done by simply dividing the
+image height by three and keeping the width the same. In the case that the height was not
+divisible by three, one row was removed from each image that contained an extra row to allow for
+easier merging and alignment down the line.</p>
+
+<h2>Single-Scale Alignment</h2>
+<p>Using the blue scale as the alignment scale, the red and green scales were looped through and
+compared to the blue scale. For the comparison, a shift size ranging between -15 and 15 for the
+x and y axis was applied to the green and red scale. Each possible shift was compared to the
+original blue scale for each of the other two scales and given a score using the euclidean
+distance or normalized cross correlation. The shifting technique allows for the pixels to wrap
+around the axes to preserve the image for fair comparison. The shifts that resulted in the best
+scores were preserved and used in the merger to create the final image. This technique worked
+quite well for the smaller images but did not work well for larger images as not only did it take a
+long time, but also the scales were not aligned well, as negative fifteen to fifteen is not a big
+enough search window.</p>
+<div class="row">
+<figure>
+<img src="media/ncc_results/single_scale_alignment/00125v.jpg" alt="River scene, single-scale alignment">
+<figcaption>Smaller image: correctly merged</figcaption>
+</figure>
+<figure>
+<img src="media/ncc_results/single_scale_alignment/00458u.jpg" alt="Train, single-scale alignment">
+<figcaption>Larger image: misaligned at full size</figcaption>
+</figure>
+</div>
+<p>The image of the train is the larger image which looks good at this size but when looking at the
+full size image it was not able to align the channels properly. The other image is smaller and
+correctly merged.</p>
+
+<h3>NCC vs L2</h3>
+<p>For the most part, the NCC and L2 algorithms produce similar results with similar time
+complexity. However, when it comes to the Emir image, NCC fails to align properly due to the
+different channels having different brightness values. This problem is fixed with the L2
+comparison or when using the NCC comparison with an edge map.</p>
+<div class="row">
+<figure>
+<img src="media/ncc_results/multi_scale_alignment/emir.jpg" alt="Emir aligned with NCC">
+<figcaption>NCC</figcaption>
+</figure>
+<figure>
+<img src="media/l2_results/multi_scale_alignment/emir.jpg" alt="Emir aligned with L2">
+<figcaption>L2</figcaption>
+</figure>
+</div>
+
+<h2>Multi-Scale Alignment</h2>
+<p>To solve the issues with time and alignment quality when working with high-resolution images, a
+multi-scale alignment approach of an image pyramid was implemented. This algorithm
+downsamples versions of the image until reaching a desired low-resolution image. Then starting
+at the lowest resolution image, a standard single-scale search (-15 to 15) is performed to
+estimate an initial shift. After finding an initial shift the image is upscaled one level and has the
+desired shift applied to it. Once applied, another single-scale search is applied using a smaller
+window (-2 to 2) and this process continues until the image is back to its original size.</p>
+<p>This recursive process significantly reduces the search space while allowing for effective
+alignment for larger higher resolution images resulting in accurate merger of each colour scale.
+This alignment struggles on examples when a colour is bright on one plate, but dark on another
+plate.</p>
+<div class="row">
+<figure>
+<img src="media/ncc_results/multi_scale_alignment/00125v.jpg" alt="River scene, multi-scale alignment">
+<figcaption>Smaller image</figcaption>
+</figure>
+<figure>
+<img src="media/ncc_results/multi_scale_alignment/00458u.jpg" alt="Train, multi-scale alignment">
+<figcaption>Larger image: now properly aligned</figcaption>
+</figure>
+</div>
+<p>When stretched now the train image is properly aligned while being able to finish the search in
+much less than a minute. While the smaller image looks very similar to the naked eye.</p>
+
+<h2>Bells and Whistles</h2>
+
+<h3>Gradient Alignment</h3>
+<p>Similar to the multi-scale alignment recursive downsampling and
+upsampling behavior except it compares the edge strength of each colour plate instead of
+brightness of each pixel. This technique is a bit slower than the other multi-scale alignment due
+to the computation of an edge map, but improves on the shortcomings on the Emir image.</p>
+<div class="row">
+<figure>
+<img src="media/ncc_results/multi_scale_alignment/emir.jpg" alt="Emir, original multi-scale alignment">
+<figcaption>Original multi-scale alignment</figcaption>
+</figure>
+<figure>
+<img src="media/ncc_results/gradient_alignment/emir.jpg" alt="Emir, gradient multi-scale alignment">
+<figcaption>Gradient multi-scale alignment</figcaption>
+</figure>
+</div>
+
+<h3>Crop From Shifts</h3>
+<p>Uses the estimated alignment shifts to determine the inner boundary limits
+across all color channels. By trimming the excess overlap outside these limits, it automatically
+removes some color-fringing and edge artifacts from the coloured image.</p>
+<div class="row">
+<figure style="max-width: 460px;">
+<img src="media/ncc_results/crop_from_shift/emir.jpg" alt="Emir cropped from alignment shifts">
+</figure>
+</div>
+
+<h3>Auto Crop</h3>
+<p>Automatically detects and trims unwanted borders by reducing the image to
+average intensity profiles for every row and column. Each line is flagged as border if it is
+near-black, near-white, or differs noticeably from the median of the lines just inside it, and the
+border ends once a short run of consecutive clean lines is found.</p>
+<div class="row">
+<figure style="max-width: 460px;">
+<img src="media/ncc_results/auto_crop/emir.jpg" alt="Emir after auto crop">
+</figure>
+</div>
+
+<h3>Auto Contrast</h3>
+<p>Finds the low and high intensity pixel cutoffs, which are the brightest and
+darkest pixels, then normalizes the pixels to range from pure black to pure white. The cutoffs are
+computed across all channels together, so colour balance is preserved. The <code>low_pct</code> and
+<code>high_pct</code> flags clip a percentage of the pixels, removing outliers.</p>
+<div class="row">
+<figure style="max-width: 460px;">
+<img src="media/ncc_results/auto_contrast/emir.jpg" alt="Emir after auto contrast">
+</figure>
+</div>
+
+<h2>Merger</h2>
+<p>The merger consisted of stacking the aligned blue, green and red scales on the depth axis in
+the appropriate order to create the final colourful image.</p>
+
+<h2>Results</h2>
+<p>A full gallery of every image processed with both comparison metrics at each stage of the
+pipeline is available on the <a href="gallery.html">results gallery page</a>:</p>
+<ul>
+<li><a href="gallery.html#l2">L2 results</a>:
+<a href="gallery.html#l2-single_scale_alignment">single-scale</a>,
+<a href="gallery.html#l2-multi_scale_alignment">multi-scale</a>,
+<a href="gallery.html#l2-gradient_alignment">gradient</a>,
+<a href="gallery.html#l2-crop_from_shift">crop from shifts</a>,
+<a href="gallery.html#l2-auto_crop">auto crop</a>,
+<a href="gallery.html#l2-auto_contrast">auto contrast</a></li>
+<li><a href="gallery.html#ncc">NCC results</a>:
+<a href="gallery.html#ncc-single_scale_alignment">single-scale</a>,
+<a href="gallery.html#ncc-multi_scale_alignment">multi-scale</a>,
+<a href="gallery.html#ncc-gradient_alignment">gradient</a>,
+<a href="gallery.html#ncc-crop_from_shift">crop from shifts</a>,
+<a href="gallery.html#ncc-auto_crop">auto crop</a>,
+<a href="gallery.html#ncc-auto_contrast">auto contrast</a></li>
+</ul>
+<h3>Final Results</h3>
+<div class="row gallery">
+<figure><img src="media/results/00056v.jpg" alt="00056v"><figcaption>00056v</figcaption></figure>
+<figure><img src="media/results/00125v.jpg" alt="00125v"><figcaption>00125v</figcaption></figure>
+<figure><img src="media/results/00163v.jpg" alt="00163v"><figcaption>00163v</figcaption></figure>
+<figure><img src="media/results/00458u.jpg" alt="00458u"><figcaption>00458u</figcaption></figure>
+<figure><img src="media/results/00804v.jpg" alt="00804v"><figcaption>00804v</figcaption></figure>
+<figure><img src="media/results/01007a.jpg" alt="01007a"><figcaption>01007a</figcaption></figure>
+<figure><img src="media/results/01047u.jpg" alt="01047u"><figcaption>01047u</figcaption></figure>
+<figure><img src="media/results/01164v.jpg" alt="01164v"><figcaption>01164v</figcaption></figure>
+<figure><img src="media/results/01269v.jpg" alt="01269v"><figcaption>01269v</figcaption></figure>
+<figure><img src="media/results/01522v.jpg" alt="01522v"><figcaption>01522v</figcaption></figure>
+<figure><img src="media/results/01597v.jpg" alt="01597v"><figcaption>01597v</figcaption></figure>
+<figure><img src="media/results/01598v.jpg" alt="01598v"><figcaption>01598v</figcaption></figure>
+<figure><img src="media/results/01657u.jpg" alt="01657u"><figcaption>01657u</figcaption></figure>
+<figure><img src="media/results/01725u.jpg" alt="01725u"><figcaption>01725u</figcaption></figure>
+<figure><img src="media/results/01728v.jpg" alt="01728v"><figcaption>01728v</figcaption></figure>
+<figure><img src="media/results/01861a.jpg" alt="01861a"><figcaption>01861a</figcaption></figure>
+<figure><img src="media/results/10131v.jpg" alt="10131v"><figcaption>10131v</figcaption></figure>
+<figure><img src="media/results/31421v.jpg" alt="31421v"><figcaption>31421v</figcaption></figure>
+<figure><img src="media/results/emir.jpg" alt="emir"><figcaption>emir</figcaption></figure>
+</div>
+
 </body>
 </html>

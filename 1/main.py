@@ -4,16 +4,18 @@ import cv2
 import numpy as np
 
 def read_image(file_path):
-    return cv2.imread(file_path)
-
-def crop_white_border(img, threshold=230):
-    img = img[~np.all((img > threshold) | (img < 255 - threshold), axis=1)]  # Remove white rows
-    img = img[:, ~np.all((img > threshold) | (img < 255 - threshold), axis=0)]  # Remove white columns
+    img = cv2.imread(file_path, cv2.IMREAD_GRAYSCALE | cv2.IMREAD_ANYDEPTH)
+    img, _ = _to_float(img)
     return img
 
-def crop_black_border(img, threshold=10):
-    img = img[~np.all((img < threshold) | (img > 255 - threshold), axis=1)]  # Remove black rows
-    img = img[:, ~np.all((img < threshold) | (img > 255 - threshold), axis=0)]  # Remove black columns
+def crop_white_border(img, threshold=0.9):
+    img = img[~np.all((img > threshold) | (img < 1 - threshold), axis=1)]
+    img = img[:, ~np.all((img > threshold) | (img < 1 - threshold), axis=0)]
+    return img
+
+def crop_black_border(img, threshold=0.04):
+    img = img[~np.all((img < threshold) | (img > 1 - threshold), axis=1)]
+    img = img[:, ~np.all((img < threshold) | (img > 1 - threshold), axis=0)]
     return img
 
 def split_image(img):
@@ -21,9 +23,9 @@ def split_image(img):
     third = h // 3
     remainder = h % 3
     if remainder == 1:
-        img = img[:-1, :]  # Remove the last row
+        img = img[:-1, :]
     elif remainder == 2:
-        img = img[:-2, :]  # Remove the last two rows
+        img = img[:-2, :]
     top_third = img[:third, :]
     middle_third = img[third:2*third, :]
     bottom_third = img[2*third:, :]
@@ -37,13 +39,10 @@ def crop_image(img, crop_ratio=0.10):
     height, width = img.shape[:2]  
     crop_h = int(height * crop_ratio)
     crop_w = int(width * crop_ratio)
-
     img_cropped = img[crop_h:height-crop_h, crop_w:width-crop_w]
-
     return img_cropped
 
 def merge_images(img1, img2, img3):
-
     return np.dstack((img1, img2, img3))
 
 def align_channels(img1, img2, img3, algorithm='ncc', shift_size=15, initial_shifts=None, use_edges=False):
@@ -78,7 +77,6 @@ def align_channels(img1, img2, img3, algorithm='ncc', shift_size=15, initial_shi
                     best_shift = (dx, dy)
 
         best_shifts.append(best_shift)
-        # Apply the winning shift to the ORIGINAL channel, not the edge map
         final_imgs.append(np.roll(img, shift=best_shift[::-1], axis=(0, 1)))
 
     return final_imgs[0], final_imgs[1], final_imgs[2], best_shifts
@@ -93,34 +91,30 @@ def ncc(img1, img2):
 def L2(img1, img2):
     a = img1.astype(np.float64)
     b = img2.astype(np.float64)
-    # Negated so that higher = better, matching NCC in the search loop
     return -np.sum((a - b) ** 2)
 
-def process_image_single(file_path):
+def process_image_single(file_path, algorithm="ncc"):
     img = read_image(file_path)
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    img = crop_white_border(img)
+    img = crop_black_border(img)
     b, g, r = split_image(img)
-
-    # Align B and R to G (green is the most robust reference)
-    g_aligned, b_aligned, r_aligned, _ = align_channels(g, b, r, algorithm='ncc')
+    b_aligned, g_aligned, r_aligned, _ = align_channels(b, g, r, algorithm=algorithm)
     final_img = merge_images(b_aligned, g_aligned, r_aligned)
-    
     return final_img
 
-def downsample_images(img1, img2, img3, use_edges = False):
+def downsample_images(img1, img2, img3, algorithm="ncc", use_edges = False):
     height, width = img1.shape[:2]
     if height < 200 or width < 200:
-        img1_aligned, img2_aligned, img3_aligned, best_shifts = align_channels(img1, img2, img3, algorithm='ncc', shift_size=15, use_edges=use_edges)
+        img1_aligned, img2_aligned, img3_aligned, best_shifts = align_channels(img1, img2, img3, algorithm=algorithm, shift_size=15, use_edges=use_edges)
         return img1_aligned, img2_aligned, img3_aligned, best_shifts
     else:
         img1_downsampled = cv2.pyrDown(img1)
         img2_downsampled = cv2.pyrDown(img2)
         img3_downsampled = cv2.pyrDown(img3)
-
-        img1_aligned, img2_aligned, img3_aligned, best_shifts= downsample_images(img1_downsampled, img2_downsampled, img3_downsampled, use_edges=use_edges)
+        img1_aligned, img2_aligned, img3_aligned, best_shifts= downsample_images(img1_downsampled, img2_downsampled, img3_downsampled, algorithm=algorithm, use_edges=use_edges)
         best_shifts[0] = (best_shifts[0][0] * 2, best_shifts[0][1] * 2)
         best_shifts[1] = (best_shifts[1][0] * 2, best_shifts[1][1] * 2)
-        img1_aligned, img2_aligned, img3_aligned, best_shifts = align_channels(img1, img2, img3, algorithm='ncc', shift_size=2, initial_shifts=best_shifts, use_edges=use_edges)
+        img1_aligned, img2_aligned, img3_aligned, best_shifts = align_channels(img1, img2, img3, algorithm=algorithm, shift_size=2, initial_shifts=best_shifts, use_edges=use_edges)
         return img1_aligned, img2_aligned, img3_aligned, best_shifts
 
 def crop_from_shifts(img, shifts, extra_margin = 0):
@@ -135,23 +129,15 @@ def crop_from_shifts(img, shifts, extra_margin = 0):
     h, w = img.shape[:2]
     return img[top:h-bottom, left:w-right]
 
-def process_image_pyramid(file_path):
+def process_image_pyramid(file_path, algorithm="ncc"):
     img = read_image(file_path)
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) 
-    img = crop_white_border(img, threshold=200)
-    img = crop_black_border(img, threshold=55)
+    img = crop_white_border(img, threshold=0.78)
+    img = crop_black_border(img, threshold=0.22)
     b, g, r = split_image(img)
 
-    # img1_aligned, img2_aligned, img3_aligned, _ = align_channels(img1, img2, img3, algorithm='ncc')
-    # Align B and R to G (green is the most robust reference)
-    g_aligned, b_aligned, r_aligned, best_shifts = downsample_images(g, b, r)
+    b_aligned, g_aligned, r_aligned, best_shifts = downsample_images(b, g, r, algorithm=algorithm)
     final_img = merge_images(b_aligned, g_aligned, r_aligned)
-
-    final_img = crop_from_shifts(final_img, best_shifts)
-    final_img = auto_contrast(final_img, low_pct=1, high_pct=99)
-    # final_img = gamma_correct(final_img, gamma=0.8)
-    # final_img = clahe_contrast(final_img)
-    return final_img
+    return final_img, best_shifts
 
 def _to_float(img):
     if np.issubdtype(img.dtype, np.integer):
@@ -187,39 +173,72 @@ def edge_map(img):
     gy = cv2.Sobel(img, cv2.CV_64F, 0, 1, ksize=3)
     return np.sqrt(gx**2 + gy**2)
 
-
-
-def process_image_gradient(file_path):
+def process_image_gradient(file_path, algorithm="ncc"):
     img = read_image(file_path)
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) 
-    img = crop_white_border(img, threshold=200)
-    img = crop_black_border(img, threshold=55)
+    img = crop_white_border(img, threshold=0.78)
+    img = crop_black_border(img, threshold=0.22)
     b, g, r = split_image(img)
-    
-    # img1_aligned, img2_aligned, img3_aligned, _ = align_channels(img1, img2, img3, algorithm='ncc')
-    # Align B and R to G (green is the most robust reference)
-    g_aligned, b_aligned, r_aligned, best_shifts = downsample_images(g, b, r, use_edges=True)
+    b_aligned, g_aligned, r_aligned, best_shifts = downsample_images(b, g, r, algorithm=algorithm, use_edges=True)
     final_img = merge_images(b_aligned, g_aligned, r_aligned)
     
-    final_img = crop_from_shifts(final_img, best_shifts)
-    final_img = auto_contrast(final_img, low_pct=1, high_pct=99)
-    # final_img = gamma_correct(final_img, gamma=0.8)
-    # final_img = clahe_contrast(final_img)
-    return final_img
+    return final_img, best_shifts
 
+def _border_depth(profile, band, run, window, tol=0.15, dark=0.1, bright=0.95):
+    good_run = 0
+    for i in range(band):
+        inner = np.median(profile[i + run:i + run + window], axis=0)
+        line = profile[i]
+        bad = np.any(line < dark) or np.any(line > bright) or np.any(np.abs(line - inner) > tol)
+        good_run = 0 if bad else good_run + 1
+        if good_run == run:
+            return i - run + 1
+    return band
+
+def auto_crop(img, band_ratio=0.12, margin_ratio=0.005):
+    f = img.astype(np.float64)
+    h, w = f.shape[:2]
+    rows, cols = f.mean(axis=1), f.mean(axis=0)
+    bh, bw = int(h * band_ratio), int(w * band_ratio)
+    rh, rw = max(3, h // 100), max(3, w // 100)
+    wh, ww = max(10, h // 30), max(10, w // 30)
+    depths = [_border_depth(rows, bh, rh, wh), _border_depth(rows[::-1], bh, rh, wh),
+              _border_depth(cols, bw, rw, ww), _border_depth(cols[::-1], bw, rw, ww)]
+    mh, mw = max(1, int(h * margin_ratio)), max(1, int(w * margin_ratio))
+    top, bottom, left, right = [d + m if d else 0 for d, m in zip(depths, (mh, mh, mw, mw))]
+    return img[top:h - bottom, left:w - right]
+
+def bells_and_whistles(image, best_shifts):
+    # image = crop_from_shifts(image, best_shifts)
+    image = auto_crop(image)
+    image = auto_contrast(image, low_pct=5, high_pct=95)
+    # image = _from_float(image, np.dtype(np.uint8))
+    # image = clahe_contrast(image)
+    return image
 
 def main():
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    data_dir = os.path.join(script_dir, 'data')
-    results_dir = os.path.join(script_dir, 'results')
+    data_dir = os.path.join(script_dir, 'media/data')
+    results_dir = os.path.join(script_dir, 'media/results')
     os.makedirs(results_dir, exist_ok=True)
-
+    algorithm = "ncc"
     for file_path in sorted(glob.glob(os.path.join(data_dir, '*.jpg'))):
-        # merged_image = process_image_single(file_path)
-        merged_image = process_image_pyramid(file_path)
+        # merged_image = process_image_single(file_path, algorithm=algorithm)
+        # merged_image, best_shifts = process_image_pyramid(file_path, algorithm=algorithm)
+        merged_image, best_shifts = process_image_gradient(file_path, algorithm=algorithm)
+        final_image = bells_and_whistles(merged_image, best_shifts)
         output_path = os.path.join(results_dir, os.path.basename(file_path))
-        cv2.imwrite(output_path, merged_image)
+        cv2.imwrite(output_path, _from_float(final_image, np.dtype(np.uint8)))
         print(f'Saved {output_path}')
+
+    for file_path in sorted(glob.glob(os.path.join(data_dir, '*.tif'))):
+            # merged_image = process_image_single(file_path, algorithm=algorithm)
+            # merged_image, best_shifts = process_image_pyramid(file_path, algorithm=algorithm)
+            merged_image, best_shifts = process_image_gradient(file_path, algorithm=algorithm)
+            final_image = bells_and_whistles(merged_image, best_shifts)
+            output_path = os.path.join(results_dir, os.path.basename(file_path))
+            cv2.imwrite(output_path, _from_float(final_image, np.dtype(np.uint16)))
+            print(f'Saved {output_path}')
+
 
 if __name__ == "__main__":
     main()
