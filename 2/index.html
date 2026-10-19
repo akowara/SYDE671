@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Assignment 2</title>
+<style>
+body {
+font-family: Arial, sans-serif;
+margin: 20px auto;
+max-width: 960px;
+padding: 0 16px;
+line-height: 1.5;
+color: #222;
+}
+h1 { margin-bottom: 0; }
+.subtitle { color: #666; margin-top: 4px; }
+h2 { border-bottom: 1px solid #ddd; padding-bottom: 4px; margin-top: 40px; }
+h3 { margin-top: 28px; }
+h2.part { font-size: 1.8em; border-bottom: 3px solid #222; margin-top: 56px; }
+.row {
+display: flex;
+flex-wrap: wrap;
+gap: 16px;
+margin: 16px 0;
+}
+figure {
+flex: 1 1 280px;
+margin: 0;
+}
+figure.wide { flex-basis: 100%; }
+figure img {
+width: 100%;
+display: block;
+}
+figcaption {
+font-size: 0.9em;
+color: #555;
+margin-top: 4px;
+}
+table { border-collapse: collapse; margin: 16px 0; }
+th, td { border: 1px solid #ddd; padding: 6px 12px; text-align: right; }
+th:first-child, td:first-child { text-align: left; }
+th { background: #f5f5f5; }
+.table-wrap { overflow-x: auto; }
+.thumbs figure { flex: 1 1 120px; }
+pre {
+background: #f5f5f5;
+border: 1px solid #ddd;
+padding: 12px;
+overflow-x: auto;
+font-size: 0.85em;
+line-height: 1.4;
+}
+</style>
+</head>
+<body>
+
+<p><a href="../index.html">&larr; Back to portfolio</a></p>
+<h1>SYDE671 - Assignment 2</h1>
+<p class="subtitle">Arthur Kowara</p>
+
+<h2 class="part">Part 1: Filters</h2>
+
+<h3>Part 1.1: Convolutions from Scratch</h3>
+<p>This section was done using 2 or 4 for loops and a combination of array manipulations. It was helpful to show
+the power of convolutions as well as gaining a better understanding of how they work. In all examples, the scipy
+convolution was the quickest. Comparing the four loop to two loop convolutions, for the 9x9 box the two loop
+convolution was much quicker, but for D<sub>x</sub> and D<sub>y</sub> the four loop convolution was the quicker
+option. This is due to D<sub>x</sub> and D<sub>y</sub> having fewer inner iterations at the kernel level.</p>
+<div class="table-wrap">
+<table>
+<tr><th>Kernel</th><th>Four loops</th><th>Two loops</th><th>scipy</th></tr>
+<tr><td>9x9 box</td><td>7.44 s</td><td>1.25 s</td><td>0.0801 s</td></tr>
+<tr><td>D<sub>x</sub></td><td>0.47 s</td><td>1.15 s</td><td>0.0078 s</td></tr>
+<tr><td>D<sub>y</sub></td><td>0.47 s</td><td>1.08 s</td><td>0.0074 s</td></tr>
+</table>
+</div>
+<p>Maximum difference from scipy for the 9x9 box: 1.33e-15 (four loops) and 6.66e-16 (two loops). For D<sub>x</sub>
+the difference was 0 for both.</p>
+<p>For the boundaries, the image is zero padded by (k &minus; 1)/2 pixels on each side before convolving so the output
+is the same size as the input. This is the same as scipy's <code>convolve2d</code> with <code>mode="same"</code>,
+<code>boundary="fill"</code> and <code>fillvalue=0</code>, which is why the differences are basically zero. Because of
+the zero padding the edges of the output get darker for the box filter since part of the kernel is averaging zeros.
+The kernel is also flipped before sliding it over the image so it is a true convolution and not a correlation.</p>
+<pre><code>def zero_pad(img, kH, kW):
+    pad_top = (kH - 1) // 2
+    pad_bottom = kH - 1 - pad_top
+    pad_left = (kW - 1) // 2
+    pad_right = kW - 1 - pad_left
+    H, W = img.shape
+    padded = np.zeros((H + pad_top + pad_bottom, W + pad_left + pad_right))
+    padded[pad_top:pad_top + H, pad_left:pad_left + W] = img
+    return padded
+
+
+def conv_four_loops(img, kernel):
+    kernel = np.flip(kernel)
+    kH, kW = kernel.shape
+    H, W = img.shape
+    padded = zero_pad(img, kH, kW)
+    output = np.zeros((H, W))
+
+    for i in range(H):
+        for j in range(W):
+            total = 0.0
+            for m in range(kH):
+                for n in range(kW):
+                    total += padded[i + m, j + n] * kernel[m, n]
+            output[i, j] = total
+    return output
+
+def conv_two_loops(img, kernel):
+    kernel = np.flip(kernel)
+    kH, kW = kernel.shape
+    H, W = img.shape
+    padded = zero_pad(img, kH, kW)
+    output = np.zeros((H, W))
+
+    for i in range(H):
+        for j in range(W):
+            output[i, j] = np.sum(padded[i:i + kH, j:j + kW] * kernel)
+    return output
+
+box = np.ones((9, 9)) / 81.0
+Dx = np.array([[1, 0, -1]])
+Dy = np.array([[1], [0], [-1]])</code></pre>
+<div class="row">
+<figure class="wide">
+<a href="results/part1_1_results.jpg"><img src="results/part1_1_results.jpg" alt="Image convolved with the 9x9 box, Dx and Dy filters"></a>
+</figure>
+</div>
+
+<h3>Part 1.2: Finite Difference Operator</h3>
+<p>It seems that the best qualitative threshold is between 0.075 and 0.1 depending on the trade off chosen. Personally,
+I prefer having sharper edges with some added noise so I would pick 0.075 as the desired threshold. With the 0.075
+threshold, the edges of the buildings in the back are sharper and show more details than 0.1. When it comes to a
+threshold of 0.05 there is too much noise shown to confidently say it is the best threshold.</p>
+<div class="row">
+<figure class="wide">
+<a href="results/part1_2_gradients.jpg"><img src="results/part1_2_gradients.jpg" alt="Cameraman partial derivatives and gradient magnitude"></a>
+<figcaption>Partial derivatives and gradient magnitude</figcaption>
+</figure>
+<figure class="wide">
+<a href="results/part1_2_thresholds.jpg"><img src="results/part1_2_thresholds.jpg" alt="Edge images at different thresholds"></a>
+<figcaption>Edge images at different thresholds</figcaption>
+</figure>
+<figure style="max-width: 420px;">
+<a href="results/part1_2_results.jpg"><img src="results/part1_2_results.jpg" alt="Final cameraman edge image"></a>
+<figcaption>Final edge image</figcaption>
+</figure>
+</div>
+
+<h3>Part 1.3: Derivative of Gaussian (DoG) Filter</h3>
+<p>The previous method used in 1.2 has a heavy trade off between noise and edges which requires design choices to be
+made in order to form the cleanest image to answer the question. The two methods used in this section create sharper
+gradients (D<sub>x</sub> and D<sub>y</sub>), which lead to a cleaner edge image in the end. Comparing the DoG and Blur
+methods, the DoG method outperforms, creating sharper gradients which lead to a sharper edge map. The Blur method leads
+to less noise than part 1.2, but forms duller gradients forming a worse edge map. This makes sense because the change
+between pixels on a blurry image is not as intense as it would be for a sharper image.</p>
+<div class="row">
+<figure class="wide">
+<a href="results/part1_3_original_blurred.jpg"><img src="results/part1_3_original_blurred.jpg" alt="Original and blurred cameraman"></a>
+<figcaption>Original and blurred image</figcaption>
+</figure>
+<figure class="wide">
+<a href="results/part1_3_dog_filters.jpg"><img src="results/part1_3_dog_filters.jpg" alt="Derivative of Gaussian filters"></a>
+<figcaption>DoG filters</figcaption>
+</figure>
+<figure class="wide">
+<a href="results/part1_3_gradients.jpg"><img src="results/part1_3_gradients.jpg" alt="Gradients from the blur and DoG methods"></a>
+<figcaption>Gradients: blur method vs DoG method</figcaption>
+</figure>
+<figure class="wide">
+<a href="results/part1_3_thresholds.jpg"><img src="results/part1_3_thresholds.jpg" alt="Edge images at different thresholds for the blur and DoG methods"></a>
+<figcaption>Edge images at different thresholds</figcaption>
+</figure>
+</div>
+<p>To verify that the DoG filter gives the same result as blurring then taking the derivative, I took the absolute
+difference between the two gradient magnitude images. Away from the borders the max difference is 1.21e-15, which is
+just floating point error, so the two methods are the same. The only difference is at the border (max 0.311) because
+the zero padding happens at a different step in each method, blurring first pads the image once and then the
+derivative pads the blurred image again, while the DoG only pads once.</p>
+<div class="row">
+<figure style="max-width: 420px;">
+<a href="results/part1_3_difference.jpg"><img src="results/part1_3_difference.jpg" alt="Absolute difference between the blur-then-derivative and DoG gradient magnitudes"></a>
+<figcaption>|Blur then D &minus; DoG|, only the border is non-zero</figcaption>
+</figure>
+</div>
+
+<h3>Gradient Orientation</h3>
+<p>Using the DoG results, each pixel has a gradient of I<sub>x</sub> and I<sub>y</sub>. Given the partial derivatives
+at each pixel, it is possible to get the orientation of the gradient vector using arctan2. To calculate this, I
+created a function which takes in the y and x derivatives and does the following:</p>
+<ul>
+<li>Calculates the absolute value of x and y, then calculates the ratio, keeping it within the range of [0, 1]
+(swapping the numerator and denominator if needed). If both x and y are 0, the orientation is undefined and is set
+to 0.</li>
+<li>Passes the ratio to an arctan function, which calculates the arctan using the half angle identity and a Taylor
+series up to 15 terms.</li>
+<li>If the numerator and denominator were swapped, adjusts the result to &pi;/2 &minus; &theta;.</li>
+<li>Adjusts the arctan result based on the quadrant to give an accurate arctan2 result: if x &lt; 0,
+&theta; = &pi; &minus; &theta;, and if y &lt; 0, &theta; = &minus;&theta;, giving a final angle in the range
+(&minus;&pi;, &pi;].</li>
+</ul>
+<p>To check the function I compared it to <code>np.arctan2</code> only as a test (it is not used for the results) and
+the max difference was 7.59e-14. The orientation is then mapped to hue in HSV. The first image only uses hue, which
+is noisy in flat areas since tiny gradients still have a direction. The second image uses the gradient magnitude as
+the value so only the real edges show up, and the colour shows which direction each edge is facing.</p>
+<div class="row">
+<figure class="wide">
+<a href="results/part1_3_orientation.jpg"><img src="results/part1_3_orientation.jpg" alt="Gradient orientation map"></a>
+</figure>
+</div>
+
+<h2 class="part">Part 2: Applications</h2>
+
+<h3>Part 2.1: Image Sharpening</h3>
+<p>The unsharp mask is formed by building a 2D Gaussian kernel and convolving it with the image. This kernel averages
+out pixels with their neighbouring pixels, which softens the edges and acts as a blur filter. Since the Gaussian kernel
+creates a low frequency blurred image, it can be subtracted from the original image and the difference between the two
+is the sharp edges. Having an image of only sharp edges, it can be multiplied by a factor greater than 1 (alpha in the
+example) to accentuate edges, then added to the original image to create a sharpened version with stronger edges.</p>
+<p>The images below show that as alpha increased the edges became stronger and more noticeable, which is consistent
+with an image being sharpened. The images also show the unsharp mask and the transformations performed step by step.
+First there is the normal image, then a Gaussian kernel is applied to blur the image. After blurring, the blurred
+image is subtracted from the original, showing off its edges. Finally the edges are multiplied by an alpha of 1.5 and
+added to the original image, creating a sharpened image with clear edges.</p>
+<p>All of these steps can also be combined into a single convolution, which is the unsharp mask filter. Since
+sharpened = f + &alpha;(f &minus; f * G), it can be rewritten as f * ((1 + &alpha;)e &minus; &alpha;G) where e is the
+unit impulse. The results shown are from this single filter, and the max difference from the step by step version is
+about 2e-15 so they are the same.</p>
+
+<h3>Taj Mahal</h3>
+<div class="row">
+<figure class="wide">
+<a href="results/part2_1_taj_alphas.jpg"><img src="results/part2_1_taj_alphas.jpg" alt="Taj Mahal sharpened with increasing alpha"></a>
+<figcaption>Increasing alpha</figcaption>
+</figure>
+<figure class="wide">
+<a href="results/part2_1_taj_sharpening.jpg"><img src="results/part2_1_taj_sharpening.jpg" alt="Taj Mahal unsharp mask steps"></a>
+<figcaption>Unsharp mask steps: original, blurred, edges, sharpened</figcaption>
+</figure>
+<figure style="max-width: 360px;">
+<a href="results/part2_1_taj_results.jpg"><img src="results/part2_1_taj_results.jpg" alt="Sharpened Taj Mahal"></a>
+<figcaption>Sharpened result</figcaption>
+</figure>
+</div>
+
+<h3>My Image</h3>
+<div class="row">
+<figure class="wide">
+<a href="results/part2_1_part2_1_sharpening.jpg"><img src="results/part2_1_part2_1_sharpening.jpg" alt="Unsharp mask steps on my image"></a>
+<figcaption>Unsharp mask steps: original, blurred, edges, sharpened</figcaption>
+</figure>
+<figure class="wide">
+<a href="results/part2_1_part2_1_alphas.jpg"><img src="results/part2_1_part2_1_alphas.jpg" alt="My image sharpened with increasing alpha"></a>
+<figcaption>Increasing alpha</figcaption>
+</figure>
+<figure style="max-width: 360px;">
+<a href="results/part2_1_part2_1_results.jpg"><img src="results/part2_1_part2_1_results.jpg" alt="Sharpened version of my image"></a>
+<figcaption>Sharpened result</figcaption>
+</figure>
+</div>
+
+<h3>Evaluation: Blur a Sharp Image Then Sharpen It Again</h3>
+<p>For the evaluation I took a sharp image of a skyline, blurred it with a Gaussian (&sigma; = 2), and then tried to
+sharpen it again using the unsharp mask with different alphas. The PSNR compared to the original is shown above each
+image. Sharpening helps a bit, going from 29.6 dB for the blurred image to 30.7 dB at &alpha; = 2, but it never gets
+close to the original. Looking at the zoomed crop, the edges of the buildings look sharper but the fine details like
+the windows and the noise in the sky do not come back. This makes sense because the blur removed those high
+frequencies, and the unsharp mask can only boost the high frequencies that are still left in the image, it can not
+create new ones. At &alpha; = 4 the PSNR goes back down and there are bright halos around the buildings, which shows
+that sharpening too much starts to add artifacts instead of detail.</p>
+<div class="row">
+<figure class="wide">
+<a href="results/part2_1_resharpen.jpg"><img src="results/part2_1_resharpen.jpg" alt="Sharp skyline, blurred, and re-sharpened with alpha 1, 2 and 4, with zoomed crops"></a>
+</figure>
+</div>
+
+<h3>Part 2.2: Hybrid Images</h3>
+<p>The images below show my results from Part 2.2 using the suggested paper. I created three hybrid images: Nutmeg
+and Derek, a happy and a straight face, and a bear and a man. For each image pair I adjusted different weights for
+the averaging to create as balanced an image as possible in terms of high and low frequencies. To show off the
+intermediate results I chose the hybrid image of a happy and a straight face. For this example the low frequency
+input is a woman who has a straight face, while the high frequency input is a man smiling. The two images were
+aligned based on the location of their eyes, and any rotation needed was done using my arctan2 function from Part 1.
+The man's face dominates when up close but fades away as the image zooms out, which is as expected. When combining
+the images, different cutoff frequencies were experimented with, and the best solutions seem to be specific to the
+image pairs. The result images for each pair show which cutoffs were chosen.</p>
+<div class="row">
+<figure style="max-width: 420px;">
+<a href="results/part2_2_happy_straight_hybrid.jpg"><img src="results/part2_2_happy_straight_hybrid.jpg" alt="Hybrid of a happy and a straight face"></a>
+<figcaption>Happy / straight face hybrid</figcaption>
+</figure>
+</div>
+
+<h3>Alignment</h3>
+<p>To align the images, two points are clicked on each image (the centre of each eye). Each image is first translated
+so the midpoint between the eyes is at the centre, then the image with the larger distance between the eyes is scaled down so the distance between the
+eyes is the same in both. The angle of the line between the eyes is found using my arctan2 function from Part 1 and
+the high frequency image is rotated by the difference in angle. Finally both images are cropped to the largest
+rectangle where they overlap so there are no black borders. The overlay on the right shows that the eyes line up in
+both images after alignment.</p>
+<div class="row">
+<figure class="wide">
+<a href="results/part2_2_happy_straight_alignment.jpg"><img src="results/part2_2_happy_straight_alignment.jpg" alt="Original and aligned happy and straight face images with an overlay"></a>
+</figure>
+</div>
+
+<h3>Frequency Analysis</h3>
+<p>Looking at the frequency analysis, both original images have similar frequencies, carrying most of their energy
+at low frequencies. The low-passed image only has a small region around the center, and the border lines are
+preserved, which means the Gaussian has strongly suppressed the high frequencies as desired. The high-pass filter is
+the opposite, as expected: the border lines are much weaker and the center is not as concentrated, meaning that the
+energy is spread over the high frequencies. After merging, the frequencies are similar to the original images,
+signifying that the merger preserved the high and low frequencies, as the frequency image of the hybrid resembles the
+frequency images of the originals.</p>
+<div class="row">
+<figure class="wide">
+<a href="results/part2_2_happy_straight_frequency.jpg"><img src="results/part2_2_happy_straight_frequency.jpg" alt="Fourier analysis of the inputs, filtered images and hybrid"></a>
+</figure>
+</div>
+<p>The images of the Laplacians and Gaussians at different levels are very interesting since they show which
+frequencies are available at each layer. This was helpful for debugging and figuring out how well the chosen cutoffs
+work with each image pair.</p>
+<div class="row">
+<figure class="wide">
+<a href="results/part2_2_happy_straight_pyramids.jpg"><img src="results/part2_2_happy_straight_pyramids.jpg" alt="Gaussian and Laplacian stacks of the hybrid"></a>
+</figure>
+</div>
+
+<h3>Results</h3>
+<p>Below are the original images used and their final hybrid images after merging. Above each image are the high and
+low frequency cutoffs used.</p>
+<div class="row">
+<figure class="wide">
+<a href="results/part2_2_happy_straight_result.jpg"><img src="results/part2_2_happy_straight_result.jpg" alt="Happy and straight face inputs and hybrid"></a>
+</figure>
+<figure class="wide">
+<a href="results/part2_2_bear_result.jpg"><img src="results/part2_2_bear_result.jpg" alt="Bear and man inputs and hybrid"></a>
+</figure>
+<figure class="wide">
+<a href="results/part2_2_derek_nutmeg_result.jpg"><img src="results/part2_2_derek_nutmeg_result.jpg" alt="Derek and Nutmeg inputs and hybrid"></a>
+</figure>
+</div>
+
+<h3>Bells and Whistles: Colour</h3>
+<p>The most interesting part of playing around with the colours is finding out that colour is a low frequency feature,
+so the high-pass filter removes most of the colour, essentially making that image grayscale. That finding means
+there are really only two options that look different: the hybrid stays mostly grayscale (grayscale or colour only on
+the high frequency image, which look almost the same), or the low frequency image has colour. When the low frequency
+image has colour, the hybrid image looks more natural from a shorter distance away, but makes it more difficult to
+see the high frequency image up close since the colour belongs to the low frequency face. For this reason I believe it
+is better to keep the hybrid mostly grayscale by only using colour on the high frequency image, making the effect
+more balanced between frequencies instead of dominating on one frequency.</p>
+<p>Each image below shows the different options for colour as well as what the image would look like from further
+away.</p>
+<div class="row">
+<figure class="wide">
+<a href="results/part2_2_happy_straight_color.jpg"><img src="results/part2_2_happy_straight_color.jpg" alt="Colour options for the happy and straight face hybrid"></a>
+</figure>
+<figure class="wide">
+<a href="results/part2_2_bear_color.jpg"><img src="results/part2_2_bear_color.jpg" alt="Colour options for the bear hybrid"></a>
+</figure>
+<figure class="wide">
+<a href="results/part2_2_derek_nutmeg_color.jpg"><img src="results/part2_2_derek_nutmeg_color.jpg" alt="Colour options for the Derek and Nutmeg hybrid"></a>
+</figure>
+</div>
+
+<h3>Part 2.3: Gaussian and Laplacian Stacks</h3>
+<p>The Gaussian stack is made by blurring the image with a Gaussian at each level without downsampling, with the
+sigma doubling every level. Each Laplacian level is the difference between two Gaussian levels, and the last
+Laplacian level is the last Gaussian level so that adding up the whole Laplacian stack gives back the original
+image. The stacks for the apple and orange are shown below.</p>
+<div class="row">
+<figure class="wide">
+<a href="results/part2_3_gaussian_laplacian_stacks.jpg"><img src="results/part2_3_gaussian_laplacian_stacks.jpg" alt="Gaussian and Laplacian stacks for the apple and orange, levels 0 to 5"></a>
+</figure>
+</div>
+<p>The next image shows the Gaussian and Laplacian stacks for the orange and apple and recreates the outcomes of Figure
+3.42. The second image is a bigger version of the final result of the combination and looks to be in line with the
+textbook.</p>
+<div class="row">
+<figure style="flex-basis: 420px;">
+<a href="results/part2_3_oraple_stacks.jpg"><img src="results/part2_3_oraple_stacks.jpg" alt="Gaussian and Laplacian stacks for the oraple"></a>
+<figcaption>Recreating Figure 3.42 (a) to (l)</figcaption>
+</figure>
+<figure style="flex-basis: 420px; align-self: center;">
+<a href="results/part2_3_oraple.jpg"><img src="results/part2_3_oraple.jpg" alt="Final oraple"></a>
+<figcaption>Final oraple</figcaption>
+</figure>
+</div>
+
+<h3>Part 2.4: Multiresolution Blending</h3>
+
+<h3>Dog and Lion</h3>
+<p>The first combination is a dog and a lion merged with a vertical line down the middle, similar to the oraple. Both
+sets of eyes line up well, which makes the effect look good, and there is a minimal seam between the two images. The
+mask used is shown between the original images and the merged image.</p>
+<div class="row">
+<figure class="wide">
+<a href="results/part2_4_dog_lion_blend.jpg"><img src="results/part2_4_dog_lion_blend.jpg" alt="Dog, lion, vertical mask and blend"></a>
+</figure>
+<figure style="max-width: 360px;">
+<a href="results/part2_4_dog_lion.jpg"><img src="results/part2_4_dog_lion.jpg" alt="Dog and lion blend"></a>
+</figure>
+</div>
+
+<h3>Moon Over the Rockies</h3>
+<p>This combination is of the Rocky Mountains and the moon, to make the image look like the moon is rising. The mask
+was made by tracing out the foreground of the mountains, then combining the moon image over the background of the
+mountain image.</p>
+<div class="row">
+<figure class="wide">
+<a href="results/part2_4_moon_rockies_blend.jpg"><img src="results/part2_4_moon_rockies_blend.jpg" alt="Rockies, moon, traced mask and blend"></a>
+</figure>
+<figure style="max-width: 420px;">
+<a href="results/part2_4_moon_rockies.jpg"><img src="results/part2_4_moon_rockies.jpg" alt="Moon rising over the Rockies"></a>
+</figure>
+</div>
+<p>The images below show the masked Laplacian stack levels for each image, which is the section of each image that
+was used in the reconstruction.</p>
+<div class="row">
+<figure style="max-width: 640px;">
+<a href="results/part2_4_moon_rockies_stack.jpg"><img src="results/part2_4_moon_rockies_stack.jpg" alt="Masked Laplacian stacks for the moon and Rockies blend"></a>
+</figure>
+</div>
+
+<h3>Astronaut Over the Forest</h3>
+<p>This combination is supposed to show an astronaut floating in the night sky above a mountain, as if seen from
+Earth. This one followed all the steps but was not as cool of an effect due to the background of the astronaut. As a
+next step, a mask could be created to crop out the astronaut and then add them to the image of the mountain.</p>
+<div class="row">
+<figure class="wide">
+<a href="results/part2_4_astronaut_forest_blend.jpg"><img src="results/part2_4_astronaut_forest_blend.jpg" alt="Astronaut, night forest, mask and blend"></a>
+</figure>
+<figure style="max-width: 420px;">
+<a href="results/part2_4_astronaut_forest.jpg"><img src="results/part2_4_astronaut_forest.jpg" alt="Astronaut floating over the night forest"></a>
+</figure>
+</div>
+
+<h3>Moon Eye</h3>
+<p>This final combination shows a moon replacing a dog's eye. This is done by creating an image where the moon is the
+size of the dog's eye and is at the same spot in the image as the dog's eye. Creating a mask which crops out the dog's
+eye, and the opposite for the moon image, causes this effect.</p>
+<div class="row">
+<figure class="wide">
+<a href="results/part2_4_moon_eye_blend.jpg"><img src="results/part2_4_moon_eye_blend.jpg" alt="Dog, aligned moon, eye mask and blend"></a>
+</figure>
+<figure style="max-width: 360px;">
+<a href="results/part2_4_moon_eye.jpg"><img src="results/part2_4_moon_eye.jpg" alt="Dog with a moon for an eye"></a>
+</figure>
+</div>
+
+<h3>Bells and Whistles: Grayscale</h3>
+<p>Below are the grayscale versions of the images. For this task colour definitely enhances the effect. During these
+combinations all frequencies are preserved, which allows the colour to be present in the combinations without
+deteriorating. The colour in the images allows the human eye to process the image better and understand the effect
+going on. For example, in grayscale the moon in the dog's eye does not seem as crazy as it did in full colour.</p>
+<div class="row">
+<figure class="wide">
+<a href="results/part2_4_oraple_gray_blend.jpg"><img src="results/part2_4_oraple_gray_blend.jpg" alt="Grayscale oraple blend"></a>
+</figure>
+<figure class="wide">
+<a href="results/part2_4_dog_lion_gray_blend.jpg"><img src="results/part2_4_dog_lion_gray_blend.jpg" alt="Grayscale dog and lion blend"></a>
+</figure>
+<figure class="wide">
+<a href="results/part2_4_moon_rockies_gray_blend.jpg"><img src="results/part2_4_moon_rockies_gray_blend.jpg" alt="Grayscale moon and Rockies blend"></a>
+</figure>
+<figure class="wide">
+<a href="results/part2_4_astronaut_forest_gray_blend.jpg"><img src="results/part2_4_astronaut_forest_gray_blend.jpg" alt="Grayscale astronaut and forest blend"></a>
+</figure>
+<figure class="wide">
+<a href="results/part2_4_moon_eye_gray_blend.jpg"><img src="results/part2_4_moon_eye_gray_blend.jpg" alt="Grayscale moon eye blend"></a>
+</figure>
+</div>
+<div class="row">
+<figure style="flex-basis: 420px;">
+<a href="results/part2_4_moon_rockies_gray_stack.jpg"><img src="results/part2_4_moon_rockies_gray_stack.jpg" alt="Grayscale masked Laplacian stacks for the moon and Rockies"></a>
+<figcaption>Grayscale masked Laplacian stacks</figcaption>
+</figure>
+<figure style="flex-basis: 420px;">
+<div class="row thumbs" style="margin: 0;">
+<figure><a href="results/part2_4_oraple_gray.jpg"><img src="results/part2_4_oraple_gray.jpg" alt="Grayscale oraple"></a></figure>
+<figure><a href="results/part2_4_dog_lion_gray.jpg"><img src="results/part2_4_dog_lion_gray.jpg" alt="Grayscale dog and lion"></a></figure>
+<figure><a href="results/part2_4_moon_rockies_gray.jpg"><img src="results/part2_4_moon_rockies_gray.jpg" alt="Grayscale moon over the Rockies"></a></figure>
+<figure><a href="results/part2_4_astronaut_forest_gray.jpg"><img src="results/part2_4_astronaut_forest_gray.jpg" alt="Grayscale astronaut over the forest"></a></figure>
+<figure><a href="results/part2_4_moon_eye_gray.jpg"><img src="results/part2_4_moon_eye_gray.jpg" alt="Grayscale moon eye"></a></figure>
+</div>
+<figcaption>Grayscale results</figcaption>
+</figure>
+</div>
+
+<h2 class="part">What I Learned</h2>
+<p>Overall, this assignment was very educational on image processing and its overlap with signal processing. After finishing the assignment I see the connection between 
+    the two as the core principles of image processing came down to processing the images as frequencies. At the start sharpening, creating hybrid images and blending looked 
+    like separate tasks, but after further investigation they all involved separating the low and high frequencies and putting them back together in different ways. The images 
+    showing the intermediate steps of different tasks were very helpful in understanding what is happening behind the scenes of image processing. It was one thing to understand how to code this assignment but then seeing those images made it much easier to understand what was actually happening on the frequency side of things.
+</p>
+
+</body>
+</html>
