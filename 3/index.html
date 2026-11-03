@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Assignment 3</title>
+<style>
+body {
+font-family: Arial, sans-serif;
+margin: 20px auto;
+max-width: 960px;
+padding: 0 16px;
+line-height: 1.5;
+color: #222;
+}
+h1 { margin-bottom: 0; }
+.subtitle { color: #666; margin-top: 4px; }
+h2 { border-bottom: 1px solid #ddd; padding-bottom: 4px; margin-top: 40px; }
+h3 { margin-top: 28px; }
+h2.part { font-size: 1.8em; border-bottom: 3px solid #222; margin-top: 56px; }
+.row {
+display: flex;
+flex-wrap: wrap;
+gap: 16px;
+margin: 16px 0;
+}
+figure {
+flex: 1 1 280px;
+margin: 0;
+}
+figure.wide { flex-basis: 100%; }
+figure img {
+width: 100%;
+display: block;
+}
+figcaption {
+font-size: 0.9em;
+color: #555;
+margin-top: 4px;
+}
+.thumbs figure { flex: 1 1 140px; }
+table { border-collapse: collapse; margin: 16px 0; }
+th, td { border: 1px solid #ddd; padding: 6px 12px; text-align: right; }
+th:first-child, td:first-child { text-align: left; }
+th { background: #f5f5f5; }
+.table-wrap { overflow-x: auto; }
+</style>
+</head>
+<body>
+
+<p><a href="../index.html">&larr; Back to portfolio</a></p>
+<h1>SYDE671 - Assignment 3</h1>
+<p class="subtitle">Arthur Kowara</p>
+
+<h2 class="part">Part A: Image Warping and Mosaicing</h2>
+
+<h3>Part A.1: Shoot the Pictures</h3>
+<div class="row thumbs">
+<figure><a href="images/IMG_3254.jpeg"><img src="images/IMG_3254.jpeg" alt="Meeting room, left"></a><figcaption>Pair 1, image 0</figcaption></figure>
+<figure><a href="images/IMG_3255.jpeg"><img src="images/IMG_3255.jpeg" alt="Meeting room, right"></a><figcaption>Pair 1, image 1</figcaption></figure>
+<figure><a href="images/IMG_3262.jpeg"><img src="images/IMG_3262.jpeg" alt="Lounge, left"></a><figcaption>Pair 2, image 2</figcaption></figure>
+<figure><a href="images/IMG_3263.jpeg"><img src="images/IMG_3263.jpeg" alt="Lounge, right"></a><figcaption>Pair 2, image 3</figcaption></figure>
+<figure><a href="images/IMG_3271.jpeg"><img src="images/IMG_3271.jpeg" alt="Skyline, left"></a><figcaption>Pair 3, image 4</figcaption></figure>
+<figure><a href="images/IMG_3272.jpeg"><img src="images/IMG_3272.jpeg" alt="Skyline, right"></a><figcaption>Pair 3, image 5</figcaption></figure>
+</div>
+
+<h3>Part A.2: Recover Homographies</h3>
+<p>The following images show the shared points selected to calculate the homography between two images. The same
+was tried using only 4 points, but that led to poor warping, and that is why six points were selected. When selecting
+the points, there was a focus on selecting sharp features in order, such as corners, which helps ensure shared
+features were selected and in the correct order.</p>
+<div class="row">
+<figure><a href="results/selected_points_img1_0.jpg"><img src="results/selected_points_img1_0.jpg" alt="Selected points, image 0"></a><figcaption>Selected points, image 0</figcaption></figure>
+<figure><a href="results/selected_points_img2_0.jpg"><img src="results/selected_points_img2_0.jpg" alt="Selected points, image 1"></a><figcaption>Selected points, image 1</figcaption></figure>
+</div>
+<div class="row">
+<figure><a href="results/selected_points_img1_2.jpg"><img src="results/selected_points_img1_2.jpg" alt="Selected points, image 2"></a><figcaption>Selected points, image 2</figcaption></figure>
+<figure><a href="results/selected_points_img2_2.jpg"><img src="results/selected_points_img2_2.jpg" alt="Selected points, image 3"></a><figcaption>Selected points, image 3</figcaption></figure>
+</div>
+<div class="row">
+<figure><a href="results/selected_points_img1_4.jpg"><img src="results/selected_points_img1_4.jpg" alt="Selected points, image 4"></a><figcaption>Selected points, image 4</figcaption></figure>
+<figure><a href="results/selected_points_img2_4.jpg"><img src="results/selected_points_img2_4.jpg" alt="Selected points, image 5"></a><figcaption>Selected points, image 5</figcaption></figure>
+</div>
+<p>The following shows the point correspondences from each image, the system of equations and the recovered
+homography matrix.</p>
+<div class="row">
+<figure class="wide"><a href="results/homography_equations.png"><img src="results/homography_equations.png" alt="Point correspondences, system of equations Ah = 0, and the recovered homography compared to OpenCV"></a></figure>
+</div>
+
+<h3>Part A.3: Warp the Images</h3>
+<div class="table-wrap">
+<table>
+<tr><th>Pair</th><th>Nearest neighbour time</th><th>Bilinear time</th></tr>
+<tr><td>Pair 1</td><td>0.0486 s</td><td>0.0814 s</td></tr>
+<tr><td>Pair 2</td><td>0.0564 s</td><td>0.0652 s</td></tr>
+<tr><td>Pair 3</td><td>0.0600 s</td><td>0.0609 s</td></tr>
+</table>
+</div>
+<p>Visually looking at the warps both interpolation methods produced, both outputs look similar. However, when zooming
+in and looking at the finer details, the bilinear method produces smoother edges, which is expected due to using a
+weighted average of nearby pixels instead of only one pixel.</p>
+<p>Looking at the timing of all image pairs, the nearest neighbour algorithm performs quicker. This is expected, as
+the bilinear method utilizes four times as many memory reads as the nearest neighbour method. Given the size of the
+images used, it does not affect the program much. Both methods scale linearly with the size of the images used, so
+the relative cost stays about the same regardless of the image size. For this reason, the bilinear method has a
+better trade-off between quality and time compared to the nearest neighbour method.</p>
+<div class="row">
+<figure><a href="results/warped_nn_image_0.jpg"><img src="results/warped_nn_image_0.jpg" alt="Nearest neighbour warp, pair 1"></a><figcaption>Nearest neighbour, pair 1</figcaption></figure>
+<figure><a href="results/warped_bilinear_image_0.jpg"><img src="results/warped_bilinear_image_0.jpg" alt="Bilinear warp, pair 1"></a><figcaption>Bilinear, pair 1</figcaption></figure>
+</div>
+<div class="row">
+<figure><a href="results/warped_nn_image_2.jpg"><img src="results/warped_nn_image_2.jpg" alt="Nearest neighbour warp, pair 2"></a><figcaption>Nearest neighbour, pair 2</figcaption></figure>
+<figure><a href="results/warped_bilinear_image_2.jpg"><img src="results/warped_bilinear_image_2.jpg" alt="Bilinear warp, pair 2"></a><figcaption>Bilinear, pair 2</figcaption></figure>
+</div>
+<div class="row">
+<figure><a href="results/warped_nn_image_4.jpg"><img src="results/warped_nn_image_4.jpg" alt="Nearest neighbour warp, pair 3"></a><figcaption>Nearest neighbour, pair 3</figcaption></figure>
+<figure><a href="results/warped_bilinear_image_4.jpg"><img src="results/warped_bilinear_image_4.jpg" alt="Bilinear warp, pair 3"></a><figcaption>Bilinear, pair 3</figcaption></figure>
+</div>
+
+<h3>Rectification</h3>
+<p>The results of the rectification look good, suggesting that so far the homography matrix computation and warping
+functions are correctly working.</p>
+<div class="row">
+<figure><a href="results/rectification_input.jpg"><img src="results/rectification_input.jpg" alt="Book with selected corners"></a><figcaption>Input with selected corners</figcaption></figure>
+<figure><a href="results/rectification.jpg"><img src="results/rectification.jpg" alt="Rectified book"></a><figcaption>Rectified</figcaption></figure>
+</div>
+<div class="row">
+<figure><a href="results/rectification_input_2.jpg"><img src="results/rectification_input_2.jpg" alt="Sign with selected corners"></a><figcaption>Input with selected corners</figcaption></figure>
+<figure><a href="results/rectification_2.jpg"><img src="results/rectification_2.jpg" alt="Rectified sign"></a><figcaption>Rectified</figcaption></figure>
+</div>
+
+<h3>Part A.4: Blend the Images into a Mosaic</h3>
+<p>In the previous section, the conclusion was that bilinear was the better option due to its trade-off between speed
+and quality, so the focus will be on using the bilinear interpolation method.</p>
+<p>Process:</p>
+<ul>
+<li>Take two images of the same scene with decent overlap, with enough shared keypoints between the two.</li>
+<li>Select six key points that are shared between images. When selecting the key points there is a focus on selecting
+defined features in an intuitive order as this helps with accuracy and consistency. If the key points are selected in
+the wrong order, mosaics will look incorrect. If dull features are selected, it could lead to a mosaic that does not
+line up properly due to error between the points in the two images. This step is about calculating the homography
+matrix.</li>
+<li>When warping the image, the final mosaic canvas needs to be calculated. This is done by going through each image
+and its related H matrix in order to get the warped corners. Once all warped corners are calculated, it is easy to get
+the maximum and minimum x and y values to get the shape of the final mosaic. Along with this step is the calculation
+of the translation matrix which moves the bounding box of the mosaic to be lined up with the top left corner.</li>
+<li>Now that the final mosaic canvas is calculated, each image needs to be placed onto the canvas. In order to do this,
+the images need to be warped using the methods discussed in the previous question and a matching weight map needs to
+be calculated. The weight map spans the mosaic and uses a distance transform to make the center of the
+image 1 while falling smoothly toward 0 at the edges. The mask is warped like the image so it lines up with the warped
+pixels.</li>
+<li>Now that the image is warped correctly, and the weight mask is calculated, the next step is to blend the images
+correctly using these values to create the mosaic. Two blending techniques were used as part of a one-shot procedure:
+feather blending and Laplacian pyramid blending.</li>
+<li><strong>Feather Blending:</strong> Each output pixel is a weighted average of the overlapping images. The highest
+weight is one in the middle and fades to zero at the edges of the image, causing one image to take over the other
+gradually instead of abruptly switching between the two. This method tends to hide the seams between images better
+but averages fine details, which can show up as blur or ghosting.</li>
+<li><strong>Laplacian Pyramid Blending:</strong> Each image is split into a low-frequency part and a detail part,
+which creates a Laplacian pyramid with a single level. This should improve on the blending process because different
+frequencies need different treatment. Each frequency is blended its own way and the results are added back together.
+Low frequencies should blend over a wider area so there is no visible seam, while high frequencies should blend over a
+narrow area. This is where Laplacian pyramid blending gets its advantages.</li>
+</ul>
+<p>Comparing the two blending techniques, some ghosting and blur shows up when using feather blending. The Laplacian
+blending technique seems to improve these shortcomings, but the seam between the two images is more noticeable.
+Personally, the Laplacian blending technique creates a more realistic image, as it removes the ghosting at the cost of
+a more noticeable seam.</p>
+
+<h3>Meeting Room</h3>
+<div class="row">
+<figure><a href="results/nn_f_mosaic_0.jpg"><img src="results/nn_f_mosaic_0.jpg" alt="Meeting room, nearest neighbour, feather blend"></a><figcaption>Nearest neighbour + feather</figcaption></figure>
+<figure><a href="results/bl_f_mosaic_0.jpg"><img src="results/bl_f_mosaic_0.jpg" alt="Meeting room, bilinear, feather blend"></a><figcaption>Bilinear + feather</figcaption></figure>
+<figure><a href="results/nn_l_mosaic_0.jpg"><img src="results/nn_l_mosaic_0.jpg" alt="Meeting room, nearest neighbour, Laplacian blend"></a><figcaption>Nearest neighbour + Laplacian</figcaption></figure>
+<figure><a href="results/bl_l_mosaic_0.jpg"><img src="results/bl_l_mosaic_0.jpg" alt="Meeting room, bilinear, Laplacian blend"></a><figcaption>Bilinear + Laplacian</figcaption></figure>
+</div>
+
+<h3>Lounge</h3>
+<div class="row">
+<figure><a href="results/nn_f_mosaic_2.jpg"><img src="results/nn_f_mosaic_2.jpg" alt="Lounge, nearest neighbour, feather blend"></a><figcaption>Nearest neighbour + feather</figcaption></figure>
+<figure><a href="results/bl_f_mosaic_2.jpg"><img src="results/bl_f_mosaic_2.jpg" alt="Lounge, bilinear, feather blend"></a><figcaption>Bilinear + feather</figcaption></figure>
+<figure><a href="results/nn_l_mosaic_2.jpg"><img src="results/nn_l_mosaic_2.jpg" alt="Lounge, nearest neighbour, Laplacian blend"></a><figcaption>Nearest neighbour + Laplacian</figcaption></figure>
+<figure><a href="results/bl_l_mosaic_2.jpg"><img src="results/bl_l_mosaic_2.jpg" alt="Lounge, bilinear, Laplacian blend"></a><figcaption>Bilinear + Laplacian</figcaption></figure>
+</div>
+
+<h3>Skyline</h3>
+<div class="row">
+<figure><a href="results/nn_f_mosaic_4.jpg"><img src="results/nn_f_mosaic_4.jpg" alt="Skyline, nearest neighbour, feather blend"></a><figcaption>Nearest neighbour + feather</figcaption></figure>
+<figure><a href="results/bl_f_mosaic_4.jpg"><img src="results/bl_f_mosaic_4.jpg" alt="Skyline, bilinear, feather blend"></a><figcaption>Bilinear + feather</figcaption></figure>
+<figure><a href="results/nn_l_mosaic_4.jpg"><img src="results/nn_l_mosaic_4.jpg" alt="Skyline, nearest neighbour, Laplacian blend"></a><figcaption>Nearest neighbour + Laplacian</figcaption></figure>
+<figure><a href="results/bl_l_mosaic_4.jpg"><img src="results/bl_l_mosaic_4.jpg" alt="Skyline, bilinear, Laplacian blend"></a><figcaption>Bilinear + Laplacian</figcaption></figure>
+</div>
+
+<h2 class="part">Part B: Feature Matching for Autostitching</h2>
+
+<h3>Part B.1: Harris Corners and ANMS</h3>
+<p>From the output images, it is clear that ANMS is a vital part of corner detection. The Harris corner detector is
+able to find a lot of corners, so many that they are not valuable until most of them are removed using a technique
+such as ANMS. The corner detection is the first step in the auto mosaic pipeline.</p>
+<p>ANMS keeps the 500 corners with the largest suppression radius, where a corner&rsquo;s radius is the distance to the
+nearest corner that is significantly stronger than it (using a robustness constant of c = 0.9). This keeps strong
+corners while spreading them evenly across the image.</p>
+<div class="row">
+<figure><a href="results/harris_corners_0.jpeg"><img src="results/harris_corners_0.jpeg" alt="Harris corners, image 0"></a><figcaption>Harris corners, image 0</figcaption></figure>
+<figure><a href="results/harris_corners_anms_0.jpeg"><img src="results/harris_corners_anms_0.jpeg" alt="Corners after ANMS, image 0"></a><figcaption>After ANMS, image 0</figcaption></figure>
+</div>
+<div class="row">
+<figure><a href="results/harris_corners_2.jpeg"><img src="results/harris_corners_2.jpeg" alt="Harris corners, image 2"></a><figcaption>Harris corners, image 2</figcaption></figure>
+<figure><a href="results/harris_corners_anms_2.jpeg"><img src="results/harris_corners_anms_2.jpeg" alt="Corners after ANMS, image 2"></a><figcaption>After ANMS, image 2</figcaption></figure>
+</div>
+<div class="row">
+<figure><a href="results/harris_corners_4.jpeg"><img src="results/harris_corners_4.jpeg" alt="Harris corners, image 4"></a><figcaption>Harris corners, image 4</figcaption></figure>
+<figure><a href="results/harris_corners_anms_4.jpeg"><img src="results/harris_corners_anms_4.jpeg" alt="Corners after ANMS, image 4"></a><figcaption>After ANMS, image 4</figcaption></figure>
+</div>
+
+<h3>Part B.2: Feature Descriptors</h3>
+<p>The images show some of the interest points which the Harris algorithm detects and how they are saved as feature
+descriptors. These descriptors will be used to find the same points in the other image. If an area in the other image
+resembles one of these descriptors, then it will think it is the same interest point; this will lead to feature
+matching in the next section.</p>
+<p>Each descriptor is created by blurring the image with a Gaussian (&sigma; = 2), taking the 40x40 window around each
+corner and downsampling it to an 8x8 patch. Each patch is then bias/gain normalized by subtracting its mean and
+dividing by its standard deviation, which makes the descriptors less sensitive to changes in brightness and
+contrast.</p>
+<div class="row">
+<figure class="wide"><a href="results/descriptors_0.jpeg"><img src="results/descriptors_0.jpeg" alt="Sample descriptors, image 0"></a><figcaption>Sample descriptors, image 0</figcaption></figure>
+<figure class="wide"><a href="results/descriptors_2.jpeg"><img src="results/descriptors_2.jpeg" alt="Sample descriptors, image 2"></a><figcaption>Sample descriptors, image 2</figcaption></figure>
+<figure class="wide"><a href="results/descriptors_4.jpeg"><img src="results/descriptors_4.jpeg" alt="Sample descriptors, image 4"></a><figcaption>Sample descriptors, image 4</figcaption></figure>
+</div>
+
+<h3>Part B.3: Feature Matching</h3>
+<p>Overall, the feature matching does a pretty good job matching corresponding features between the two images;
+however, there are a few features that get matched that are wrong for each image. This is fine because RANSAC should
+filter out the bad matches during its homography computation process.</p>
+<p>For each descriptor, the two nearest neighbours in the other image are found. Following Lowe&rsquo;s approach, a
+match is only kept if the ratio between the first and second nearest neighbour (squared) distances is below 0.5. This
+removes ambiguous matches, where a feature looks similar to more than one point in the other image.</p>
+<div class="row">
+<figure class="wide"><a href="results/matches_0_1.jpeg"><img src="results/matches_0_1.jpeg" alt="Matches, meeting room"></a><figcaption>Matches, meeting room</figcaption></figure>
+<figure class="wide"><a href="results/matches_2_3.jpeg"><img src="results/matches_2_3.jpeg" alt="Matches, lounge"></a><figcaption>Matches, lounge</figcaption></figure>
+<figure class="wide"><a href="results/matches_4_5.jpeg"><img src="results/matches_4_5.jpeg" alt="Matches, skyline"></a><figcaption>Matches, skyline</figcaption></figure>
+</div>
+
+<h3>Part B.4: RANSAC and Automatic Mosaics</h3>
+<p>RANSAC was run for 2000 iterations. In each iteration, four random matches are chosen and used to compute a
+homography, which is then applied to all of the matched points. A match counts as an inlier if its projected point
+lands within 2 pixels of its matching point. The homography with the most inliers is kept, and the final homography is
+recomputed using least squares on all of its inliers.</p>
+<div class="row">
+<figure class="wide"><a href="results/matches_0_1_ransac.jpeg"><img src="results/matches_0_1_ransac.jpeg" alt="RANSAC inliers, meeting room"></a><figcaption>RANSAC inliers, meeting room</figcaption></figure>
+<figure class="wide"><a href="results/matches_2_3_ransac.jpeg"><img src="results/matches_2_3_ransac.jpeg" alt="RANSAC inliers, lounge"></a><figcaption>RANSAC inliers, lounge</figcaption></figure>
+<figure class="wide"><a href="results/matches_4_5_ransac.jpeg"><img src="results/matches_4_5_ransac.jpeg" alt="RANSAC inliers, skyline"></a><figcaption>RANSAC inliers, skyline</figcaption></figure>
+</div>
+
+<h3>Manual vs Automatic</h3>
+<p>Each comparison shows the manual mosaic from Part A next to the automatic mosaic, both using bilinear
+interpolation and Laplacian blending.</p>
+<div class="row">
+<figure class="wide"><a href="results/comparison_0_1.jpeg"><img src="results/comparison_0_1.jpeg" alt="Manual vs automatic mosaic, meeting room"></a><figcaption>Meeting room</figcaption></figure>
+<figure class="wide"><a href="results/comparison_2_3.jpeg"><img src="results/comparison_2_3.jpeg" alt="Manual vs automatic mosaic, lounge"></a><figcaption>Lounge</figcaption></figure>
+<figure class="wide"><a href="results/comparison_4_5.jpeg"><img src="results/comparison_4_5.jpeg" alt="Manual vs automatic mosaic, skyline"></a><figcaption>Skyline</figcaption></figure>
+</div>
+<p>RANSAC improved the feature matching drastically by removing the invalid matched features. Overall, the automatic
+mosaic creates better results as it removes human error from the key point selection. This is most visible in the
+meeting room mosaic, where the manual version shows a slight seam through the TV, while the automatic version lines
+up cleanly. The homography is also estimated from many verified inliers (13&ndash;20 per pair) rather than a few
+hand-clicked points, so small errors in any single point have much less effect on the final alignment.</p>
+
+<h3>All Automatic Mosaics</h3>
+<div class="row">
+<figure><a href="results/bl_l_mosaic_auto0_1.jpg"><img src="results/bl_l_mosaic_auto0_1.jpg" alt="Automatic mosaic, meeting room"></a><figcaption>Meeting room</figcaption></figure>
+<figure><a href="results/bl_l_mosaic_auto2_3.jpg"><img src="results/bl_l_mosaic_auto2_3.jpg" alt="Automatic mosaic, lounge"></a><figcaption>Lounge</figcaption></figure>
+<figure><a href="results/bl_l_mosaic_auto4_5.jpg"><img src="results/bl_l_mosaic_auto4_5.jpg" alt="Automatic mosaic, skyline"></a><figcaption>Skyline</figcaption></figure>
+</div>
+
+<h2 class="part">What I Learned</h2>
+<p>I learned a lot about image stitching and the process of creating a homography matrix. The most interesting part
+of the assignment was the rectification, as it showed how to crop a rectangular area out of an image. All you need is
+a homography matrix between the area being cropped and a blank area the same size. Creating the mosaics was very
+interesting, as they resemble the creation of a panoramic picture. Part A was very beneficial to understanding the
+intricacies of how the process works, and Part B helped me understand how to automate the process to improve the results
+and speed up the process.</p>
+
+</body>
+</html>

@@ -12,26 +12,26 @@ def read_images(folderpath=IMAGES_DIR):
     image_paths = sorted(p for p in Path(folderpath).iterdir() if p.suffix.lower() in ('.jpg', '.jpeg'))
     return [cv2.resize(cv2.imread(str(image_path)), None, fx=0.2, fy=0.2) for image_path in image_paths]
 
-def computeH(img1_pts, img2_pts):
+def computeH(img1_pts, img2_pts, show_equations=True):
     A = []
     for (x, y), (u, v) in zip(img1_pts, img2_pts):
         A.append([-x, -y, -1, 0, 0, 0, u*x, u*y, u])
         A.append([0, 0, 0, -x, -y, -1, v*x, v*y, v])
     A = np.array(A)
 
-    # Print the system A·h = 0 as written-out equations
-    names = ["h11", "h12", "h13", "h21", "h22", "h23", "h31", "h32", "h33"]
-    print("System of equations (A·h = 0):")
-    for row in A:
-        terms = [f"{c:+.2f}*{n}" for c, n in zip(row, names) if c != 0]
-        print(" ".join(terms), "= 0")
-    print()
+    if show_equations:
+        # Print the system A·h = 0 as written-out equations
+        names = ["h11", "h12", "h13", "h21", "h22", "h23", "h31", "h32", "h33"]
+        print("System of equations (A·h = 0):")
+        for row in A:
+            terms = [f"{c:+.2f}*{n}" for c, n in zip(row, names) if c != 0]
+            print(" ".join(terms), "= 0")
 
     _, _, Vt = np.linalg.svd(A)
     H = Vt[-1].reshape(3, 3)
     return H / H[2, 2]
 
-def select_points(img1, img2):
+def select_points(img1, img2, i, num_points=6):
     points_img1 = []
     points_img2 = []
 
@@ -53,19 +53,19 @@ def select_points(img1, img2):
     cv2.imshow('Image 1', img1_copy)
     cv2.setMouseCallback('Image 1', click_event)
 
-    while len(points_img1) < 6:
+    while len(points_img1) < num_points:
         cv2.waitKey(1)
 
-    cv2.imwrite(str(RESULTS_DIR / 'selected_points_img1.jpg'), img1_copy)  # Save the image with selected points
+    cv2.imwrite(str(RESULTS_DIR / f'selected_points_img1_{i}.jpg'), img1_copy)  # Save the image with selected points
     cv2.destroyWindow('Image 1')
 
     cv2.imshow('Image 2', img2_copy)
     cv2.setMouseCallback('Image 2', click_event_img2)
 
-    while len(points_img2) < 6:
+    while len(points_img2) < num_points:
         cv2.waitKey(1)
 
-    cv2.imwrite(str(RESULTS_DIR / 'selected_points_img2.jpg'), img2_copy)  # Save the image with selected points
+    cv2.imwrite(str(RESULTS_DIR / f'selected_points_img2_{i}.jpg'), img2_copy)  # Save the image with selected points
     cv2.destroyWindow('Image 2')
 
     return np.array(points_img1), np.array(points_img2)
@@ -74,12 +74,13 @@ def main():
     
     images = read_images(IMAGES_DIR)
     
-    img1_pts, img2_pts = select_points(images[0], images[1])
-    H = computeH(img1_pts, img2_pts)
-    print("Computed Homography Matrix:")
-    print(H)
-    H_cv, _ = cv2.findHomography(img1_pts.astype(np.float32), img2_pts.astype(np.float32))
-    print("OpenCV H:\n", H_cv)
-    
+    for i in range(0, len(images) - 1, 2):
+        img1_pts, img2_pts = select_points(images[i], images[i + 1], i)
+        H = computeH(img1_pts, img2_pts)
+        print("Computed Homography Matrix:")
+        print(H)
+        H_cv, _ = cv2.findHomography(img1_pts.astype(np.float32), img2_pts.astype(np.float32))
+        print("OpenCV H:\n", H_cv)
+        
 if __name__ == "__main__":
     main()
