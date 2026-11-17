@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Assignment 4</title>
+<style>
+body {
+font-family: Arial, sans-serif;
+margin: 20px auto;
+max-width: 960px;
+padding: 0 16px;
+line-height: 1.5;
+color: #222;
+}
+h1 { margin-bottom: 0; }
+.subtitle { color: #666; margin-top: 4px; }
+h2 { border-bottom: 1px solid #ddd; padding-bottom: 4px; margin-top: 40px; }
+h3 { margin-top: 28px; }
+h2.part { font-size: 1.8em; border-bottom: 3px solid #222; margin-top: 56px; }
+.row {
+display: flex;
+flex-wrap: wrap;
+gap: 16px;
+margin: 16px 0;
+}
+figure {
+flex: 1 1 280px;
+margin: 0;
+}
+figure.wide { flex-basis: 100%; }
+figure.medium { flex: 0 1 640px; margin: 0 auto; }
+figure img {
+width: 100%;
+display: block;
+}
+figcaption {
+font-size: 0.9em;
+color: #555;
+margin-top: 4px;
+}
+pre.matrix {
+background: #f5f5f5;
+border: 1px solid #ddd;
+padding: 10px 14px;
+overflow-x: auto;
+font-size: 0.95em;
+}
+code { background: #f5f5f5; padding: 1px 4px; }
+</style>
+</head>
+<body>
+
+<p><a href="../index.html">&larr; Back to portfolio</a></p>
+<h1>SYDE671 - Assignment 4</h1>
+<p class="subtitle">Arthur Kowara</p>
+
+<h2 class="part">Part 1: Fundamental Matrix Estimation</h2>
+
+<h3>Part 1.B: LLS 8-Point Algorithm</h3>
+<p>Fundamental matrix from the linear least squares 8-point algorithm:</p>
+<pre class="matrix">[[ 0.0000  -0.0000  -0.0035]
+ [-0.0000  -0.0000   0.0141]
+ [-0.0015  -0.0114   0.9998]]</pre>
+<p>The algorithm includes:</p>
+<ul>
+<li>Looping through each pair of points to create a row which will be used to solve a homogeneous linear system with
+9 unknowns, with each unknown being an element of the F matrix. Each row should be a correspondence that satisfies
+points2<sup>T</sup> F points1 = 0.</li>
+<li>With the resulting A = (N, 9) matrix, N = number of point pairs, singular value decomposition is used to decompose
+A. The last row from the resulting right singular vectors contains the elements corresponding to the least singular
+value. Reshaping this row creates a 3 by 3 F matrix, but it is rank 3 so it can be called F&#770; (F hat).</li>
+<li>To enforce the rank-2 constraint, SVD is performed on F&#770; to decompose the matrix and get the singular values.
+The last singular value is set to zero and the matrix is recomposed using the singular values. This process ensures
+that the resulting F matrix follows the rank-2 constraint.</li>
+</ul>
+
+<h3>Part 1.D: Normalized 8-Point Algorithm</h3>
+<p>Fundamental matrix from the normalized 8-point algorithm:</p>
+<pre class="matrix">[[ 0.0001  -0.0007  -0.1353]
+ [-0.0007  -0.0000   1.3059]
+ [ 0.0139  -0.7129   1.0000]]</pre>
+
+<h3>Part 1.F: Epipolar Lines and Distances</h3>
+<p>The epipolar lines were calculated using the transpose of the dot product of the F matrix transposed and the points
+on the second image transposed. Each line is the projection onto the first image of the ray cast from the second
+camera&rsquo;s center through the corresponding point in the second image.</p>
+<p>The distance was calculated using the point-to-line distance formula,
+<code>d = |ax + by + c| / &radic;(a&sup2; + b&sup2;)</code>, where x and y are the matching points in the first image. The
+numerator is the absolute value of the dot product of the line and the point, and dividing it by the denominator
+results in a distance in pixels.</p>
+
+<h2 class="part">Part 2: Image Rectification</h2>
+
+<h3>Part 2.D: Why Rectification Works</h3>
+<p>Rectification works so well because it warps both images, making their epipolar lines horizontal and parallel, which
+leads to matching epipolar lines being on the same row for both images. This is because a point&rsquo;s match must be
+on its epipolar line, and after rectification the match for that point is somewhere on the same row in the second
+image. This reduces the search from a 2D search to a 1D search, which is much faster and less prone to false matches.
+The remaining unknown is the disparity between images, which is inversely proportional to depth.</p>
+<div class="row">
+<figure class="wide"><a href="results/2.png"><img src="results/2.png" alt="Rectified image pair with horizontal epipolar lines drawn through matched points"></a><figcaption>Rectified image pair with epipolar lines (red) and matched points (blue)</figcaption></figure>
+</div>
+
+<h2 class="part">Part 3: Affine Structure from Motion (Factorization)</h2>
+
+<h3>Part 3.B: Factorization Steps</h3>
+<ul>
+<li>The centroid of each set of points is calculated and subtracted from each point. This removes the translation
+aspect of the camera motion.</li>
+<li>The coordinates of the resulting points are vertically stacked to create a 2m &times; N matrix referred to as D
+(m = number of images, N = number of points).</li>
+<li>Singular value decomposition is used to decompose the D matrix into a matrix containing the left singular vectors
+(U), a 1-D array of the singular values (S) and the right singular vectors (Vh).</li>
+<li>Under the affine camera model, D should only have rank 3, so the three largest singular values and corresponding
+singular vectors were kept.</li>
+<li>The resulting decomposition was factored into motion and structure matrices. The motion matrix holds the affine
+camera matrix for each image. The structure matrix&rsquo;s columns are the reconstructed 3D points.</li>
+</ul>
+
+<h3>Part 3.C: Comparison to Ground Truth</h3>
+<p>This happens because the reconstruction is only determined up to an affine transformation. For any invertible
+3 &times; 3 matrix A, (MA)(A<sup>&minus;1</sup>S) = MS. Therefore the recovered structure appears similar to the ground
+truth, but it is rotated and scaled.</p>
+<div class="row">
+<figure class="medium"><a href="results/3_1.png"><img src="results/3_1.png" alt="3D scatter plots of the factorization reconstruction and the ground truth using all points"></a><figcaption>Factorization method vs. ground truth, full set of correspondences</figcaption></figure>
+</div>
+
+<h3>Part 3.D: Singular Values (Full Set)</h3>
+<pre class="matrix">[959.5852  540.4761  184.4317  27.9152]</pre>
+<p>There are 4 singular values because D is built from 2 rows per image and 2 images (2 &times; 2), so at most it has
+four singular values, and the data does not perfectly fit the rank-3 model. In the ideal case with noise-free
+measurements, there would be 3 non-zero singular values. After centering each 3D point, it would be a linear
+projection where D = MS, where M is a 4 &times; 3 matrix and S is a 3 &times; N matrix. This would result in D being rank
+three because S has only 3 rows, and the fourth singular value would be 0.</p>
+
+<h3>Part 3.E: Subset of Correspondences</h3>
+<p>Comparing the results from the subset of the original correspondences to the ground truth, there are some
+similarities from different angles, but overall something seems off between the two. Unlike the last part, the
+similarities don&rsquo;t typically appear at first glance. This happens because the factorization method depends on the
+D matrix being close to rank 3, meaning that the top three singular vectors capture most of the true 3D structure while
+the rest is just noise. This is an assumption the method makes in order to work properly, and the following disturbs
+this assumption in the subset:</p>
+<ul>
+<li>Since there are fewer points, noise has a larger effect. Each point&rsquo;s error has much more of an influence,
+leading to the motion and structure being less accurate.</li>
+<li>When performing the method, the fourth singular value is dropped, and typically there is a large difference between
+the third and fourth values. Here, the gap between the third and fourth singular values is much smaller, so the third
+(depth) direction is barely distinguishable from noise and the reconstruction is distorted in depth.</li>
+<li>Fewer points means a less accurate centroid, which can lead to less accurate results.</li>
+</ul>
+<div class="row">
+<figure class="medium"><a href="results/3_2.png"><img src="results/3_2.png" alt="3D scatter plots of the factorization reconstruction and the ground truth using a subset of points"></a><figcaption>Factorization method vs. ground truth, subset of correspondences</figcaption></figure>
+</div>
+
+<h3>Part 3.F: Singular Values (Subset)</h3>
+<pre class="matrix">[264.544  210.0607  7.2192  5.1286]</pre>
+<p>As mentioned in the last section, the difference between the third and fourth values is much smaller, which leads to
+noise having more of an influence on the depth. With the full set of points the third singular value was about 6.6
+times bigger than the fourth, and for the subset it is only about 1.4 times bigger. This shows that the third dimension
+is barely distinguishable from the noise.</p>
+<p>Also, each value is significantly smaller, which is expected because singular values represent the spread of the
+measurements, and fewer measurements often means less spread. The small difference between the third and fourth values
+means that the measurements are closer to rank two than three, mostly differing in only two directions. This suggests
+that the points lie close to a plane or have little depth, which is what leads to the reconstruction looking reasonable
+from some viewpoints but clearly wrong when rotated.</p>
+
+<h2 class="part">Part 4: Structure from Motion</h2>
+
+<h3>Part 4.F: Reconstructing Larger Scenes</h3>
+<div class="row">
+<figure class="medium"><a href="results/4.png"><img src="results/4.png" alt="Reconstructed 3D point cloud of the statue"></a><figcaption>Reconstructed 3D point cloud</figcaption></figure>
+</div>
+<p>Reconstructing larger scenes, such as a house, is much harder for multiple reasons:</p>
+<ul>
+<li>Most obviously, it takes more images, which leads to greater memory and computational cost. A small statue
+requires only a relatively small number of images, while a house requires images from all angles, including the roof
+and all corners of the house.</li>
+<li>With more images, each new camera is estimated relative to the previous reconstruction, so small errors in R and T
+accumulate into a larger, more noticeable drift.</li>
+<li>Houses contain harder correspondences, like large surfaces with little texture and repeated patterns that cause
+features to be matched with the wrong instances. Glass windows create more trouble as they are semi-reflective.</li>
+</ul>
+
+</body>
+</html>
